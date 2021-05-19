@@ -1,0 +1,14 @@
+select 	e.gid, 
+		e.nome, 
+        (select l.matricula 
+         from ligacao l 
+         order by ST_Distance(e.geom, l.geom) asc limit 1),
+        ST_X(ST_Centroid(e.geom)) X_ETA,
+        ST_Y(ST_Centroid(e.geom)) Y_ETA
+from eta e
+
+select 	e.gid, 
+		e.nome, 
+        ST_X(ST_Centroid(e.geom)) X_ETA,
+        ST_Y(ST_Centroid(e.geom)) Y_ETA
+from eta e
