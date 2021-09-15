@@ -35,3 +35,18 @@ WHERE l.matricula IN (
 	WHERE cam.id = '61421'
 )
 ORDER BY ordem
+
+SELECT l.matricula, ST_LineLocatePoint(
+	(SELECT ST_LineMerge(geometry) FROM public.caminhamentos c 
+    WHERE c.id = 1),
+    (SELECT lc.geometry FROM public.ligacoes_clientes lc
+    WHERE lc.matricula = l.matricula)
+)*100 as ordem
+FROM public.ligacoes_clientes l
+WHERE l.matricula IN (
+    SELECT lig.matricula
+	FROM public.ligacoes_clientes lig
+		LEFT JOIN public.caminhamentos cam ON ST_DWithin(lig.geometry, cam.geometry , 10)
+	WHERE cam.id = 1
+)
+ORDER BY ordem
