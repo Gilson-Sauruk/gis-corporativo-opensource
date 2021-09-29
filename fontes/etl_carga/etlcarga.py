@@ -40,11 +40,15 @@ def getPGSQLConnection(config):
     except:
         raise
 
-def createPGSQLSchema(schema_name, schema_users, connection):
+def createPGSQLSchemas(schemas, connection):
     try:
-        sql_check = "CREATE SCHEMA IF NOT EXISTS {} AUTHORIZATION {}".format(schema_name, schema_users)
-        cursor = connection.cursor()
-        cursor.execute(sql_check)
+        for schema in schemas:
+            schema_name = schema
+            schema_user = schemas[schema]
+            sql_comm = "CREATE SCHEMA IF NOT EXISTS {} AUTHORIZATION {}".format(schema_name, schema_user)
+            cursor = connection.cursor()
+            cursor.execute(sql_comm)
+        
         connection.commit()
 
     except:
@@ -77,6 +81,9 @@ def main():
         arqlog.gera("Efetuando conexão com o servidor PGSQL...")
         pgsql_conn = getPGSQLConnection(config)
 
+        arqlog.gera("Criando esquemas no banco PGSQL, caso não existam...")
+        createPGSQLSchemas(config["pg_database"]['schemas'], pgsql_conn)
+
         arqlog.gera("Recuperando os mapas JSON de carga...")
         jsonfiles = getJSONFiles()
         arqlog.gera("{} arquivos de carga encontrados.".format(str(len(jsonfiles))))
@@ -91,9 +98,6 @@ def main():
             arqlog.gera("Carregando configurações do mapeamento...")
             with open(jsonfiles_folder + "/" + jsonfile) as jsonfiledata:
                 json_data = json.load(jsonfiledata)
-            
-            arqlog.gera("Criando esquema {} no banco PGSQL, caso não exista...".format(json_data['pgsql_schema']))
-            createPGSQLSchema('cadastro', json_data['pgsql_schema_users'], pgsql_conn)
 
             arqlog.gera("Criando camada e tabelas relacionadas...")
             createPGSQLTable(json_data['pgsql_table'], pgsql_conn)

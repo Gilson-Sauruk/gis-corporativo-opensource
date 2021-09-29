@@ -3,7 +3,12 @@
         "host": "sgbd-dev-postgis.sistemas.cesan.com.br",
         "database": "postgres", 
         "user": "postgres", 
-        "password": "postgis"
+        "password": "postgis",
+        "schemas": {
+                    "cadastro": "postgres",
+                    "cartografia": "postgres",
+                    "ambiental": "postgres"
+                }
     },
     "arcgis_databases": {
         "servidor": "sgbd-gis.cesan.com.br",
