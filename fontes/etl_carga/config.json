@@ -1,0 +1,17 @@
+{
+    "pg_database": {
+        "host": "sgbd-dev-postgis.sistemas.cesan.com.br",
+        "database": "postgres", 
+        "user": "postgres", 
+        "password": "postgis"
+    },
+    "arcgis_databases": {
+        "servidor": "sgbd-gis.cesan.com.br",
+        "instancia": "gis",
+        "core_database": "gisc_core",
+        "service": "sde:sqlserver:sgbd-gis.cesan.com.br\\gis",
+        "usuario": "ugisc",
+        "password": "2pel4ol!",
+        "core_sde_file": "gisc_core.sde"
+    }
+}
