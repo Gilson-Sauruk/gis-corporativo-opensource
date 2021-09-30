@@ -1,0 +1,17 @@
+CESAN - Script de extração, transformação e carga de dados 
+do GIS Corporativo - ArcGIS para o Geodatabase PostgreSQL + PostGIS.
+
+Python: 2.78
+
+Libraries não nativas: 
+    * arcpy (10.3.1)
+    * psycopg2
+    * unidecode
+    
+Uso:
+
+python etlcarga.py [--rebuildsde]
+
+rebuildsde: apaga e recria os arquivos SDE de conexão com o
+            geodatabase ArcGIS com os parâmetros configurados no
+            arquivo config.json

@@ -1,11 +1,13 @@
 {
+    "type": "layer",
     "arcgis_connection_file": "gisc_core.sde",
     "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
     "arcgis_layer": "gisc_core.UGISC.LIGACAO",
-    "query_fieds": ["OID@","MATRICULA","SHAPE@WKT"],
+    "query_fieds": ["MATRICULA","SHAPE@WKT"],
     "where_clause": null,
     "pgsql_schema": "cadastro",
     "pgsql_schema_users": "postgres",
     "pgsql_table": "ligacao_cliente", 
-    "pgsql_create_table_script": "ligacao_cliente.sql"
+    "pgsql_create_table_script": "ligacao_cliente.sql",
+    "pgsql_insert_fields": "(matricula, geometry)"
 }

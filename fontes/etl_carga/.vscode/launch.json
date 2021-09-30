@@ -5,11 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Arquivo Atual",
+            "name": "Python: Arquivo Atual com RebuildSDE",
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["--rebuild_sde_files"],
+            "args": ["--rebuildsde"],
+            "console": "externalTerminal"
+        },
+        {
+            "name": "Python: Arquivo Atual sem Parâmetros",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
             "console": "externalTerminal"
         }
     ]

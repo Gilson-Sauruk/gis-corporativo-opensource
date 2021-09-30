@@ -2,10 +2,10 @@ create table if not exists cadastro.ligacao_cliente (
 	id serial primary key,
 	matricula int not null,
 	data_instalacao date null,
-	hidrometro varchar(15) not null,
-	ciclo_sicat smallint not null,
-	id_situacao_agua smallint not null,
-	id_situacao_esgoto smallint not null,
+	hidrometro varchar(15) null,
+	ciclo_sicat smallint null,
+	id_situacao_agua smallint null,
+	id_situacao_esgoto smallint null,
 	observacoes text null, 
 	geometry geometry('POINT', 31984)
 );
@@ -19,6 +19,10 @@ create table if not exists cadastro.dom_situacao_esgoto (
 	id smallint primary key,
 	descricao varchar(50)
 );
+
+truncate table cadastro.dom_situacao_agua;
+truncate table cadastro.dom_situacao_esgoto;
+truncate table cadastro.ligacao_cliente;
 
 insert into cadastro.dom_situacao_agua 
 	(id, descricao)
