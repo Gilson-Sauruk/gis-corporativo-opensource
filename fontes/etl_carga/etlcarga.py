@@ -3,13 +3,14 @@ import arcpy
 import os, sys
 import json
 import psycopg2
+import pyodbc
 from unidecode import unidecode
 from log_class import Log
 
 def LoadParameters(args):
     try:
         dict_ret = {}
-        valid_pars = ["rebuildsde", "help"]
+        valid_pars = ["rebuildsde", "help", "jsonfile", "dontcreateschema"]
         if len(args) > 1:
             del args[0]
             s_args = u" ".join(args)
@@ -67,6 +68,13 @@ def getPGSQLConnection(config):
                                 user=config['pg_database']['user'], 
                                 password=config['pg_database']['password'])
         return pg_conn
+    except:
+        raise
+
+def getSICATConnection(config):
+    try:
+        sicat_conn = pyodbc.connect(config["sicat_database"]["conn_string"])
+        return sicat_conn
     except:
         raise
 
@@ -143,6 +151,108 @@ def create_sde_connections(config):
     except:
         raise
 
+def getSICATNumRows(sicat_conn, json_data):
+    try:
+        schema = json_data["mssql_schema"]
+        table = json_data["mssql_table"]
+        where_clause = json_data["where_clause"]
+        sql = "SELECT COUNT(*) FROM {}.{}".format(schema, table)
+        if where_clause is not None:
+            sql += " WHERE {}".format(where_clause)
+        
+        cursor = sicat_conn.cursor()
+        cursor.execute(sql)
+        row = cursor.fetchone()
+        numrows = row[0]
+
+        return numrows
+
+    except:
+        raise
+
+def getSICATData(sicat_conn, json_data):
+    try:
+        sicat_fields = ""
+        pgsql_fields = ""
+        sicat_fields_list = []
+        for field_row in json_data["fields"]:
+            sicat_fields_list.append(field_row[0])
+        
+        sicat_fields = ",".join(sicat_fields_list)
+        schema = json_data["mssql_schema"]
+        table = json_data["mssql_table"]
+        where_clause = json_data["where_clause"]
+        sql = "SELECT {} FROM {}.{}".format(sicat_fields, schema, table)
+        if where_clause is not None:
+            sql += " WHERE {}".format(where_clause)
+        
+        cursor = sicat_conn.cursor()
+        cursor.execute(sql)
+
+        return cursor
+
+    except:
+        raise
+
+def PrepareSQLInsert(json_data):
+    try:
+        sql = "insert into {}.{} ".format(json_data["pgsql_schema"], json_data["pgsql_table"]) 
+        fields = "("
+        
+        for f in json_data["fields"]:
+            fields += f[1] + ","
+
+        fields = fields[:-1] + ")"
+        sql += fields + " values ({})"
+
+        return sql
+
+    except:
+        raise
+
+def getSQLValuesString(row, json_data):
+    try:
+        i = 0
+        str_values = ""
+        ret = {}
+
+        for value in row:
+            tipo = json_data["fields"][i][2]
+
+            if tipo == "geometry" and value == None:
+                str_values = None
+                ret = {
+                    "result": "ERROR",
+                    "message": "Geometria nula",
+                    "value": None
+                }
+                break
+            elif value == None:
+                str_values += "NULL,"
+            else:
+                if tipo == "numeric":
+                    str_values += str(value) + ","
+                elif tipo == "text":
+                    str_values += "'" + str(value) + "',"
+                elif tipo == "datetime":
+                    f_date = str(value.year) + "-" + str(value.month) + "-" + str(value.day)
+                    str_values += "'" + f_date + "',"
+                elif tipo == "geometry":
+                    str_values += "ST_GeomFromText('" + value + "',31984),"
+            i += 1
+
+        if str_values is not None:
+            str_values = str_values[:-1]
+            ret = {
+                "result": "OK",
+                "message": "Ok",
+                "value": str_values
+            }
+
+        return ret
+
+    except:
+        raise
 
 def main():
     try:
@@ -152,6 +262,8 @@ def main():
         pars = LoadParameters(sys.argv)
         continua = True
         rebuild_sde = False
+        p_createschema = True
+        p_jason_file = None
 
         # abre o arquivo de log
         arqlog = Log()
@@ -168,7 +280,10 @@ def main():
                 continua = False
             if pars.has_key("rebuildsde"):
                 rebuild_sde = True
-                continua = True
+            if pars.has_key("jsonfile"):
+                p_jason_file = pars["jsonfile"]
+            if pars.has_key("dontcreateschema"):
+                p_createschema = False
 
         if continua:
             
@@ -185,12 +300,20 @@ def main():
             pgsql_conn = getPGSQLConnection(config)
             pgsql_cursor = pgsql_conn.cursor()
 
-            arqlog.gera("Criando esquemas no banco PGSQL, caso não existam...")
-            #createPGSQLSchemas(config["pg_database"]['schemas'], pgsql_conn)
+            arqlog.gera("Efetuando conexão com o servidor MSSQL do SICAT/SISCOM...")
+            sicat_conn = getSICATConnection(config)
 
-            arqlog.gera("Recuperando os mapas JSON de carga...")
-            jsonfiles = getJSONFiles()
-            arqlog.gera("{} arquivos de carga encontrados.".format(str(len(jsonfiles))))
+            if p_createschema:
+                arqlog.gera("Criando esquemas no banco PGSQL, caso não existam...")
+                createPGSQLSchemas(config["pg_database"]['schemas'], pgsql_conn)
+
+            if p_jason_file is None:
+                arqlog.gera("Recuperando os mapas JSON de carga...")
+                jsonfiles = getJSONFiles()
+                arqlog.gera("{} arquivos de carga encontrados.".format(str(len(jsonfiles))))
+            else:
+                jsonfiles = [p_jason_file]
+                arqlog.gera("Processando o arquivo de carga {}".format(p_jason_file))
 
             # loop over json files
             script_folder = os.path.dirname(os.path.realpath(__file__))
@@ -205,7 +328,7 @@ def main():
                 
                 if json_data['type'] == 'layer': # caso o json seja de uma camada
 
-                    arqlog.gera("Criando camada e tabelas relacionadas...")
+                    arqlog.gera("Criando camada...")
                     createPGSQLTable(json_data['pgsql_table'], pgsql_conn)
 
                     arqlog.gera("Extraindo dados para a carga da camada {}".format(json_data['pgsql_table']))
@@ -223,7 +346,9 @@ def main():
                                     json_data['pgsql_table'] + " " + json_data['pgsql_insert_fields'] + \
                                     " values ({})"
                     
-                    with arcpy.da.SearchCursor(feature_class, json_data['query_fieds']) as cursor:
+                    with arcpy.da.SearchCursor( in_table=feature_class, 
+                                                field_names=json_data['query_fieds'], 
+                                                where_clause=json_data['where_clause']) as cursor:
                         for row in cursor:
                             progress_print(count, total_records)
                             geom_field_index = (len(row) - 1) #ultima coluna é de geometria
@@ -265,10 +390,31 @@ def main():
                     pgsql_conn.commit()
 
 
-                elif json_data['type'] == 'table': # caso o json seja de uma tabela comum
-                    pass
-                
+                elif json_data['type'] == 'sicat_table': # caso o json seja de uma tabela SICAT/SISCOM
+                    
+                    arqlog.gera("Criando tabela {} caso não exista...".format(json_data['pgsql_table']))
+                    createPGSQLTable(json_data['pgsql_table'], pgsql_conn)
 
+                    arqlog.gera("Calculando numero de registros a extrair...")
+                    total_records = getSICATNumRows(sicat_conn, json_data)
+
+                    arqlog.gera("Extraindo dados da tabela de origem {}...".format(json_data['mssql_table']))
+                    cursor = getSICATData(sicat_conn, json_data)
+
+                    arqlog.gera("Construindo comando insert padrão...")
+                    sql_insert_original = PrepareSQLInsert(json_data)
+
+                    arqlog.gera("Exportando um total de " + str(total_records) + " registros...")
+                    for row in cursor.fetchall():
+                        sql_insert = sql_insert_original
+                        ret = getSQLValuesString(row, json_data)
+                        if ret["result"] == "OK":
+                            sql_insert = sql_insert.format(ret["value"])
+                        else:
+                            arqlog.gera("ERRO:" + ret["message"])
+                        
+                
+            sicat_conn.close()
             pgsql_conn.close()
             arqlog.gera("### CARGA CONCLUÍDA COM SUCESSO! ###")
     

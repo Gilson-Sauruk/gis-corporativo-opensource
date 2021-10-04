@@ -17,5 +17,8 @@
         "service": "sde:sqlserver:sgbd-gis.cesan.com.br\\gis",
         "usuario": "ugisc",
         "password": "2pel4ol!"
+    },
+    "sicat_database": {
+        "conn_string": "Driver={SQL Server}; Server=sgbd-sicatqry.sistemas.cesan.com.br\\sicat; Database=SICAT; Trusted_Connection=yes;"
     }
 }

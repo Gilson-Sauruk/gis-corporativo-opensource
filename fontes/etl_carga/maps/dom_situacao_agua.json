@@ -1,0 +1,14 @@
+{
+    "type": "sicat_table",
+    "mssql_schema": "dbo",
+    "mssql_table": "CAD_SIT_LIGACAO_AGUA",
+    "where_clause": null,
+    "pgsql_schema": "cadastro",
+    "pgsql_schema_users": "postgres",
+    "pgsql_table": "dom_situacao_agua", 
+    "pgsql_create_table_script": "dom_situacao_agua.sql",
+    "fields": [
+        ["ID_SIT_LIGACAO_AGUA", "id", "numeric"],
+        ["DC_DESCRICAO", "descricao", "text"]
+    ]
+}

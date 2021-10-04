@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Python: Arquivo Atual com RebuildSDE",
             "type": "python",
@@ -17,6 +18,14 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
+            "console": "externalTerminal"
+        },
+        {
+            "name": "Python: Arquivo Atual - debug rápido",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": ["--jsonfile", "dom_situacao_agua.json", "--dontcreateschema"],
             "console": "externalTerminal"
         }
     ]
