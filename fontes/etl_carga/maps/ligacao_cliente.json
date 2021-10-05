@@ -6,8 +6,10 @@
     "query_fieds": ["MATRICULA","SHAPE@WKT"],
     "where_clause": null,
     "pgsql_schema": "cadastro",
-    "pgsql_schema_users": "postgres",
     "pgsql_table": "ligacao_cliente", 
     "pgsql_create_table_script": "ligacao_cliente.sql",
-    "pgsql_insert_fields": "(matricula, geometry)"
+    "fields": [
+        ["MATRICULA", "matricula", "numeric"],
+        ["SHAPE@WKT", "geometry", "geometry"]
+    ]
 }

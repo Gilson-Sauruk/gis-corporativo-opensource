@@ -233,7 +233,7 @@ def getSQLValuesString(row, json_data):
                 if tipo == "numeric":
                     str_values += str(value) + ","
                 elif tipo == "text":
-                    str_values += "'" + str(value) + "',"
+                    str_values += "'" + unidecode(value) + "',"
                 elif tipo == "datetime":
                     f_date = str(value.year) + "-" + str(value.month) + "-" + str(value.day)
                     str_values += "'" + f_date + "',"
@@ -336,58 +336,37 @@ def main():
                                     json_data['arcgis_dataset'] + '/' + \
                                     json_data['arcgis_layer']
                     
-                    total_records = int(arcpy.GetCount_management(feature_class).getOutput(0))
+                    arqlog.gera("Construindo comando insert padrão...")
+                    insert_string = PrepareSQLInsert(json_data)
+                    
+                    arqlog.gera("Recuperando o total de feições a exportar...")
+                    # total_records = int(arcpy.GetCount_management(feature_class).getOutput(0))
+                    rows = [row for row in arcpy.da.SearchCursor(in_table=feature_class, 
+                                                field_names=json_data['query_fieds'], 
+                                                where_clause=json_data['where_clause'])]
+                    total_records = len(rows)
+                    
                     count = 1
                     bad_geometries = 0
 
                     arqlog.gera("Exportando um total de " + str(total_records) + " feições...")
-
-                    insert_string = "insert into " + json_data['pgsql_schema'] + "." + \
-                                    json_data['pgsql_table'] + " " + json_data['pgsql_insert_fields'] + \
-                                    " values ({})"
                     
                     with arcpy.da.SearchCursor( in_table=feature_class, 
                                                 field_names=json_data['query_fieds'], 
                                                 where_clause=json_data['where_clause']) as cursor:
                         for row in cursor:
                             progress_print(count, total_records)
-                            geom_field_index = (len(row) - 1) #ultima coluna é de geometria
-                            geometry_string = row[geom_field_index]
+                            ret = getSQLValuesString(row, json_data)
 
-                            if geometry_string is None:
-                                bad_geometries += 1
-                            else:
-                                values_string = ""
-                                i = 0
-
-                                for valor in row:
-                                    val_string = ""
-
-                                    if i == geom_field_index: # se for o campo de geometria
-                                        val_string = "ST_GeomFromText('" + valor + "',31984)"
-                                    elif valor is None: # se for um valor nulo (None)
-                                        val_string = "NULL"
-                                    elif type(valor) is unicode: # se for texto
-                                        u_text = unidecode(valor).replace("'","")
-                                        val_string = "'" + u_text + "'"
-                                    elif type(valor) is datetime.datetime: # se for data
-                                        f_date = str(valor.year) + "-" + str(valor.month) + "-" + str(valor.day)
-                                        val_string = "'" + f_date + "'"
-                                    else: # se for numerico
-                                        val_string = str(valor)
-
-                                    values_string += val_string + ","
-                                    i += 1
-
-                                values_string = values_string[:-1] # remove a última ","
-                                final_insert_string = insert_string.format(values_string) # completa a string de insert
+                            if ret["result"] == "OK":
+                                final_insert_string = insert_string.format(ret["value"]) # completa a string de insert
                                 pgsql_cursor.execute(final_insert_string)
                                 count += 1
+                            else:
+                                arqlog.gera("ERRO:" + ret["message"])
+                                bad_geometries += 1
 
-                    # efetua o commit da camada
-                    arqlog.gera("Efetuando o commit das feições na camada...")
                     arqlog.gera("Total de geometrias ruins: " + str(bad_geometries))
-                    pgsql_conn.commit()
 
 
                 elif json_data['type'] == 'sicat_table': # caso o json seja de uma tabela SICAT/SISCOM
@@ -405,13 +384,21 @@ def main():
                     sql_insert_original = PrepareSQLInsert(json_data)
 
                     arqlog.gera("Exportando um total de " + str(total_records) + " registros...")
+                    count = 1
                     for row in cursor.fetchall():
+                        progress_print(count, total_records)
                         sql_insert = sql_insert_original
                         ret = getSQLValuesString(row, json_data)
                         if ret["result"] == "OK":
                             sql_insert = sql_insert.format(ret["value"])
+                            pgsql_cursor.execute(sql_insert)
+                            count += 1
                         else:
                             arqlog.gera("ERRO:" + ret["message"])
+                    
+                # efetua o commit da camada
+                arqlog.gera("Efetuando o commit...")
+                pgsql_conn.commit()
                         
                 
             sicat_conn.close()

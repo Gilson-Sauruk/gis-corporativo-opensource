@@ -10,8 +10,12 @@ Libraries não nativas:
     
 Uso:
 
-python etlcarga.py [--rebuildsde]
+python etlcarga.py [--rebuildsde] [--jsonfile <json_file.json>] [--dontcreateschema]
 
 rebuildsde: apaga e recria os arquivos SDE de conexão com o
             geodatabase ArcGIS com os parâmetros configurados no
             arquivo config.json
+
+jsonfile: processa apenas o arquivo json especificado
+
+dontcreateschema: pula a etapa de apagar e criar os esquemas no PostGIS
