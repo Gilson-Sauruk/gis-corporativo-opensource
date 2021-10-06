@@ -1,0 +1,16 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_core.sde",
+    "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
+    "arcgis_layer": "gisc_core.UGISC.ETA",
+    "arcgis_attachments": true,
+    "where_clause": null,
+    "pgsql_schema": "cadastro",
+    "pgsql_table": "eta", 
+    "pgsql_create_table_script": "eta.sql",
+    "fields": [
+        ["NOME", "nome", "text"],
+        ["TIPO_TRATAMENTO", "id_tipo_tratamento", "domain_value", "dom_tipo_tratamento"],
+        ["SHAPE@WKT", "geometry", "geometry"]
+    ]
+}

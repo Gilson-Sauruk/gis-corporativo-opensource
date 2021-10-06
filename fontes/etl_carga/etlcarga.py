@@ -10,7 +10,7 @@ from log_class import Log
 def LoadParameters(args):
     try:
         dict_ret = {}
-        valid_pars = ["rebuildsde", "help", "jsonfile", "dontcreateschema"]
+        valid_pars = ["rebuildsde", "help", "jsonfile", "dontcreateschema", "jsonprefix"]
         if len(args) > 1:
             del args[0]
             s_args = u" ".join(args)
@@ -46,15 +46,19 @@ def getAppConfig():
     except:
         raise
 
-def getJSONFiles():
+def getJSONFiles(json_prefix):
     try:
         script_folder = os.path.dirname(os.path.realpath(__file__))
         jsonfiles_folder = script_folder + "/maps"
         jsonfiles_list = []
         for root, dirs, files in os.walk(jsonfiles_folder):
             for filename in files:
-                if filename.lower().endswith(('.json')):
-                    jsonfiles_list.append(filename)
+                if filename.lower().endswith('.json'):
+                    if json_prefix is None:
+                        jsonfiles_list.append(filename)
+                    else:
+                        if filename.lower().startswith(json_prefix):
+                            jsonfiles_list.append(filename)
 
         return jsonfiles_list
 
@@ -92,10 +96,10 @@ def createPGSQLSchemas(schemas, connection):
     except:
         raise
 
-def createPGSQLTable(table_name, connection):
+def createPGSQLTable(script_file, connection):
     try:
         script_folder = os.path.dirname(os.path.realpath(__file__))
-        sql_file_path = script_folder + '/sql_scripts/' + table_name + '.sql'
+        sql_file_path = script_folder + '/sql_scripts/' + script_file
         sql_file = open(sql_file_path, 'r')
         sql_commands = sql_file.read()
         cursor = connection.cursor()
@@ -210,7 +214,7 @@ def PrepareSQLInsert(json_data):
     except:
         raise
 
-def getSQLValuesString(row, json_data):
+def getSQLValuesString(row, json_data, domain_values):
     try:
         i = 0
         str_values = ""
@@ -237,6 +241,10 @@ def getSQLValuesString(row, json_data):
                 elif tipo == "datetime":
                     f_date = str(value.year) + "-" + str(value.month) + "-" + str(value.day)
                     str_values += "'" + f_date + "',"
+                elif tipo == "domain_value":
+                    domain = json_data["fields"][i][3]
+                    dict_values = domain_values[domain]
+                    str_values += str(dict_values[value]) + ","
                 elif tipo == "geometry":
                     str_values += "ST_GeomFromText('" + value + "',31984),"
             i += 1
@@ -254,6 +262,39 @@ def getSQLValuesString(row, json_data):
     except:
         raise
 
+def LoadDomains(fields):
+    try:
+        domains = []
+        for f in fields:
+            if f[2] == 'domain_value':
+                domains.append(f[3])
+        
+        from_to_values = None
+
+        if len(domains) > 0:
+            from_to_values = {}
+            for d in domains:
+                json_file = 'maps/' + d + '.json'
+                with open(json_file) as content:
+                    json_file_data = json.load(content)
+                from_to_values[d] = json_file_data['from_to_values']
+
+        return from_to_values
+
+    except:
+        raise
+
+def getQueryFields(field_map):
+    try:
+        query_fields = []
+        for f in field_map:
+            query_fields.append(f[0])
+        
+        return query_fields
+
+    except:
+        raise
+
 def main():
     try:
         global arqlog
@@ -264,6 +305,7 @@ def main():
         rebuild_sde = False
         p_createschema = True
         p_jason_file = None
+        p_jason_prefix = None
 
         # abre o arquivo de log
         arqlog = Log()
@@ -284,6 +326,8 @@ def main():
                 p_jason_file = pars["jsonfile"]
             if pars.has_key("dontcreateschema"):
                 p_createschema = False
+            if pars.has_key("jsonprefix"):
+                p_jason_prefix = pars["jsonprefix"]
 
         if continua:
             
@@ -309,7 +353,7 @@ def main():
 
             if p_jason_file is None:
                 arqlog.gera("Recuperando os mapas JSON de carga...")
-                jsonfiles = getJSONFiles()
+                jsonfiles = getJSONFiles(p_jason_prefix)
                 arqlog.gera("{} arquivos de carga encontrados.".format(str(len(jsonfiles))))
             else:
                 jsonfiles = [p_jason_file]
@@ -329,7 +373,7 @@ def main():
                 if json_data['type'] == 'layer': # caso o json seja de uma camada
 
                     arqlog.gera("Criando camada...")
-                    createPGSQLTable(json_data['pgsql_table'], pgsql_conn)
+                    createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
 
                     arqlog.gera("Extraindo dados para a carga da camada {}".format(json_data['pgsql_table']))
                     feature_class = json_data['arcgis_connection_file'] + '/' + \
@@ -338,11 +382,17 @@ def main():
                     
                     arqlog.gera("Construindo comando insert padrão...")
                     insert_string = PrepareSQLInsert(json_data)
+
+                    arqlog.gera("Identificando os campos de consulta...")
+                    query_fieds = getQueryFields(json_data["fields"])
+
+                    arqlog.gera("Carregando os domínios de valores para a camada...")
+                    domains = LoadDomains(json_data["fields"])
                     
                     arqlog.gera("Recuperando o total de feições a exportar...")
                     # total_records = int(arcpy.GetCount_management(feature_class).getOutput(0))
                     rows = [row for row in arcpy.da.SearchCursor(in_table=feature_class, 
-                                                field_names=json_data['query_fieds'], 
+                                                field_names=query_fieds, 
                                                 where_clause=json_data['where_clause'])]
                     total_records = len(rows)
                     
@@ -350,29 +400,26 @@ def main():
                     bad_geometries = 0
 
                     arqlog.gera("Exportando um total de " + str(total_records) + " feições...")
+
+                    for row in rows:
+                        progress_print(count, total_records)
+                        ret = getSQLValuesString(row, json_data, domains)
+
+                        if ret["result"] == "OK":
+                            final_insert_string = insert_string.format(ret["value"]) # completa a string de insert
+                            pgsql_cursor.execute(final_insert_string)
+                            count += 1
+                        else:
+                            arqlog.gera("ERRO:" + ret["message"])
+                            bad_geometries += 1
                     
-                    with arcpy.da.SearchCursor( in_table=feature_class, 
-                                                field_names=json_data['query_fieds'], 
-                                                where_clause=json_data['where_clause']) as cursor:
-                        for row in cursor:
-                            progress_print(count, total_records)
-                            ret = getSQLValuesString(row, json_data)
-
-                            if ret["result"] == "OK":
-                                final_insert_string = insert_string.format(ret["value"]) # completa a string de insert
-                                pgsql_cursor.execute(final_insert_string)
-                                count += 1
-                            else:
-                                arqlog.gera("ERRO:" + ret["message"])
-                                bad_geometries += 1
-
                     arqlog.gera("Total de geometrias ruins: " + str(bad_geometries))
 
 
                 elif json_data['type'] == 'sicat_table': # caso o json seja de uma tabela SICAT/SISCOM
                     
                     arqlog.gera("Criando tabela {} caso não exista...".format(json_data['pgsql_table']))
-                    createPGSQLTable(json_data['pgsql_table'], pgsql_conn)
+                    createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
 
                     arqlog.gera("Calculando numero de registros a extrair...")
                     total_records = getSICATNumRows(sicat_conn, json_data)
@@ -395,11 +442,15 @@ def main():
                             count += 1
                         else:
                             arqlog.gera("ERRO:" + ret["message"])
+                
+                elif json_data['type'] == 'domain_values': # caso o json seja de um domínio de valores
+
+                    arqlog.gera("Criando domínio de valores {}...".format(unidecode(json_data['name'])))
+                    createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
                     
                 # efetua o commit da camada
                 arqlog.gera("Efetuando o commit...")
                 pgsql_conn.commit()
-                        
                 
             sicat_conn.close()
             pgsql_conn.close()

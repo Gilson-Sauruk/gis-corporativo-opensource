@@ -25,7 +25,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["--jsonfile", "ligacao_cliente.json", "--dontcreateschema"],
+            "args": ["--jsonfile", "eta.json", "--dontcreateschema"],
             "console": "externalTerminal"
         }
     ]

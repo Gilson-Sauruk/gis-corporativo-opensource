@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Tipo de Tratamento",
+    "pgsql_create_table_script": "dom_tipo_tratamento.sql",
+    "from_to_values": {
+        "C" : 1,
+        "FD": 2,
+        "F" : 3
+    }
+}

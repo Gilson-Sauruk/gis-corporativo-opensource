@@ -1,0 +1,5 @@
+{
+    "type": "domain_values",
+    "name": "Status Operação",
+    "pgsql_create_table_script": "dom_status_operacao.sql"
+}

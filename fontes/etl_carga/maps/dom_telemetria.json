@@ -1,0 +1,5 @@
+{
+    "type": "domain_values",
+    "name": "Telemetria",
+    "pgsql_create_table_script": "dom_telemetria.sql"
+}
