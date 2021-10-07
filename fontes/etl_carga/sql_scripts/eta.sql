@@ -29,8 +29,16 @@ create table if not exists cadastro.eta (
     geometry geometry('MULTIPOLYGON', 31984)
 );
 
+create table if not exists cadastro.eta_anexos (
+	id serial primary key,
+	id_eta integer,
+	anexo_nome varchar(250),
+	anexo_dados bytea
+);
+
 truncate table cadastro.eta;
 
 create index if not exists nome_idx on cadastro.eta(nome);
+create index if not exists id_eta_anexo_idx on cadastro.eta_anexos(id_eta);
 create index if not exists eta_geometry_idx on cadastro.eta using GIST (geometry);
 

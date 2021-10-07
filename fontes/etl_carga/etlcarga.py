@@ -204,10 +204,14 @@ def PrepareSQLInsert(json_data):
         fields = "("
         
         for f in json_data["fields"]:
-            fields += f[1] + ","
+            if f[1] != 'objectid':
+                fields += f[1] + ","
 
         fields = fields[:-1] + ")"
         sql += fields + " values ({})"
+
+        if json_data["arcgis_attachments"]:
+            sql += " returning id"
 
         return sql
 
@@ -219,34 +223,42 @@ def getSQLValuesString(row, json_data, domain_values):
         i = 0
         str_values = ""
         ret = {}
+        dict_bool = {'S':'true', 'N':'false'}
+        oid = None
 
         for value in row:
             tipo = json_data["fields"][i][2]
 
-            if tipo == "geometry" and value == None:
-                str_values = None
-                ret = {
-                    "result": "ERROR",
-                    "message": "Geometria nula",
-                    "value": None
-                }
-                break
-            elif value == None:
-                str_values += "NULL,"
+            if tipo == "objectid":
+                oid = value
             else:
-                if tipo == "numeric":
-                    str_values += str(value) + ","
-                elif tipo == "text":
-                    str_values += "'" + unidecode(value) + "',"
-                elif tipo == "datetime":
-                    f_date = str(value.year) + "-" + str(value.month) + "-" + str(value.day)
-                    str_values += "'" + f_date + "',"
-                elif tipo == "domain_value":
-                    domain = json_data["fields"][i][3]
-                    dict_values = domain_values[domain]
-                    str_values += str(dict_values[value]) + ","
-                elif tipo == "geometry":
-                    str_values += "ST_GeomFromText('" + value + "',31984),"
+                if tipo == "geometry" and value == None:
+                    str_values = None
+                    ret = {
+                        "result": "ERROR",
+                        "message": "Geometria nula",
+                        "value": None
+                    }
+                    break
+                elif value == None:
+                    str_values += "NULL,"
+                else:
+                    if tipo == "numeric":
+                        str_values += str(value) + ","
+                    elif tipo == "text":
+                        str_values += "'" + unidecode(value).replace("'","''") + "',"
+                    elif tipo == "date":
+                        f_date = str(value.year) + "-" + str(value.month) + "-" + str(value.day)
+                        str_values += "'" + f_date + "',"
+                    elif tipo == "bool":
+                        str_values += dict_bool[value] + ","
+                    elif tipo == "domain_value":
+                        domain = json_data["fields"][i][3]
+                        dict_values = domain_values[domain]
+                        str_values += str(dict_values[str(value)]) + ","
+                    elif tipo == "geometry":
+                        str_values += "ST_GeomFromText('" + value + "',31984),"
+
             i += 1
 
         if str_values is not None:
@@ -254,7 +266,8 @@ def getSQLValuesString(row, json_data, domain_values):
             ret = {
                 "result": "OK",
                 "message": "Ok",
-                "value": str_values
+                "value": str_values,
+                "objectid" : oid
             }
 
         return ret
@@ -291,6 +304,23 @@ def getQueryFields(field_map):
             query_fields.append(f[0])
         
         return query_fields
+
+    except:
+        raise
+
+def LoadAttachments(feature_id, json_data, pgsql_cursor):
+    try:
+        insert_sql = "insert into {}.{}_anexos (id_{}, anexo_nome, anexo_dados) values (%s, %s, %s)".format(json_data["pgsql_schema"], 
+                                                                                                json_data["pgsql_table"], 
+                                                                                                json_data["pgsql_table"])
+        att_table_origin = json_data['arcgis_connection_file'] + '/' + \
+                                    json_data['arcgis_layer'] + "__ATTACH"
+        
+        where = "REL_OBJECTID = {}".format(str(feature_id))
+
+        with arcpy.da.SearchCursor(att_table_origin, ['DATA', 'ATT_NAME', 'ATTACHMENTID'], where_clause=where) as cursor:
+            for att in cursor:
+                pgsql_cursor.execute(insert_sql, (feature_id, att[1], att[0]))
 
     except:
         raise
@@ -408,6 +438,12 @@ def main():
                         if ret["result"] == "OK":
                             final_insert_string = insert_string.format(ret["value"]) # completa a string de insert
                             pgsql_cursor.execute(final_insert_string)
+
+                            if json_data["arcgis_attachments"]:
+                                arqlog.gera("Carregando anexos da camada...")
+                                inserted_id = pgsql_cursor.fetchone()[0]
+                                LoadAttachments(inserted_id, json_data, pgsql_cursor) # <<< passar o oid como parâmetro
+
                             count += 1
                         else:
                             arqlog.gera("ERRO:" + ret["message"])
