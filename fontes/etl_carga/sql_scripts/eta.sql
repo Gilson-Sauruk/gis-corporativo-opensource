@@ -37,6 +37,7 @@ create table if not exists cadastro.eta_anexos (
 );
 
 truncate table cadastro.eta;
+truncate table cadastro.eta_anexos;
 
 create index if not exists nome_idx on cadastro.eta(nome);
 create index if not exists id_eta_anexo_idx on cadastro.eta_anexos(id_eta);

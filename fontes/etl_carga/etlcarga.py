@@ -308,7 +308,7 @@ def getQueryFields(field_map):
     except:
         raise
 
-def LoadAttachments(feature_id, json_data, pgsql_cursor):
+def LoadAttachments(feature_id, objectid, json_data, pgsql_cursor):
     try:
         insert_sql = "insert into {}.{}_anexos (id_{}, anexo_nome, anexo_dados) values (%s, %s, %s)".format(json_data["pgsql_schema"], 
                                                                                                 json_data["pgsql_table"], 
@@ -316,7 +316,7 @@ def LoadAttachments(feature_id, json_data, pgsql_cursor):
         att_table_origin = json_data['arcgis_connection_file'] + '/' + \
                                     json_data['arcgis_layer'] + "__ATTACH"
         
-        where = "REL_OBJECTID = {}".format(str(feature_id))
+        where = "REL_OBJECTID = {}".format(str(objectid))
 
         with arcpy.da.SearchCursor(att_table_origin, ['DATA', 'ATT_NAME', 'ATTACHMENTID'], where_clause=where) as cursor:
             for att in cursor:
@@ -440,9 +440,9 @@ def main():
                             pgsql_cursor.execute(final_insert_string)
 
                             if json_data["arcgis_attachments"]:
-                                arqlog.gera("Carregando anexos da camada...")
+                                arqlog.gera("Carregando anexos da feição (OID: {})".format(str(ret["objectid"])))
                                 inserted_id = pgsql_cursor.fetchone()[0]
-                                LoadAttachments(inserted_id, json_data, pgsql_cursor) # <<< passar o oid como parâmetro
+                                LoadAttachments(inserted_id, ret["objectid"], json_data, pgsql_cursor)
 
                             count += 1
                         else:
