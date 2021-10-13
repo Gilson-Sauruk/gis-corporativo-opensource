@@ -7,6 +7,7 @@ Libraries não nativas:
     * arcpy (10.3.1)
     * psycopg2
     * unidecode
+    * magic (https://github.com/julian-r/python-magic) - pacote no formato wheel encontra-se na pasta "requirements"
     
 Uso:
 

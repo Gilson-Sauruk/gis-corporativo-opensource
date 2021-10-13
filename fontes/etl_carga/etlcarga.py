@@ -6,6 +6,7 @@ import psycopg2
 import pyodbc
 from unidecode import unidecode
 from log_class import Log
+#import magic
 
 def LoadParameters(args):
     try:
@@ -317,9 +318,11 @@ def LoadAttachments(feature_id, objectid, json_data, pgsql_cursor):
                                     json_data['arcgis_layer'] + "__ATTACH"
         
         where = "REL_OBJECTID = {}".format(str(objectid))
+        #f = magic.Magic(uncompress=True, mime=True)
 
         with arcpy.da.SearchCursor(att_table_origin, ['DATA', 'ATT_NAME', 'ATTACHMENTID'], where_clause=where) as cursor:
             for att in cursor:
+                #mime_type = f.from_buffer(att[0])
                 pgsql_cursor.execute(insert_sql, (feature_id, att[1], att[0]))
 
     except:
