@@ -3,12 +3,20 @@
     "arcgis_connection_file": "gisc_core.sde",
     "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
     "arcgis_layer": "gisc_core.UGISC.LIGACAO",
+    "arcgis_attachments": true,
     "where_clause": null,
     "pgsql_schema": "cadastro",
     "pgsql_table": "ligacao_cliente", 
     "pgsql_create_table_script": "ligacao_cliente.sql",
     "fields": [
+        ["OBJECTID", "objectid", "objectid"],
         ["MATRICULA", "matricula", "numeric"],
+        ["DT_INCLUSAO", "data_instalacao", "date"],
+        ["CD_HIDROMETRO", "hidrometro", "text"],
+        ["CICLO_SICAT", "ciclo_sicat", "numeric"],
+        ["SIT_LIGACAO_AGUA", "id_situacao_agua", "numeric"],
+        ["SIT_LIGACAO_ESGOTO", "id_situacao_esgoto", "numeric"],
+        ["OBS", "observacoes", "text"],
         ["SHAPE@WKT", "geometry", "geometry"]
     ]
 }

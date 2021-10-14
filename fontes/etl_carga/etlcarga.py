@@ -6,7 +6,6 @@ import psycopg2
 import pyodbc
 from unidecode import unidecode
 from log_class import Log
-#import magic
 
 def LoadParameters(args):
     try:
@@ -93,6 +92,7 @@ def createPGSQLSchemas(schemas, connection):
             cursor.execute(sql_comm)
         
         connection.commit()
+        del cursor
 
     except:
         raise
@@ -106,6 +106,7 @@ def createPGSQLTable(script_file, connection):
         cursor = connection.cursor()
         cursor.execute(sql_commands)
         connection.commit()
+        del cursor
 
     except:
         raise
@@ -169,6 +170,7 @@ def getSICATNumRows(sicat_conn, json_data):
         cursor.execute(sql)
         row = cursor.fetchone()
         numrows = row[0]
+        del cursor
 
         return numrows
 
@@ -211,8 +213,9 @@ def PrepareSQLInsert(json_data):
         fields = fields[:-1] + ")"
         sql += fields + " values ({})"
 
-        if json_data["arcgis_attachments"]:
-            sql += " returning id"
+        if json_data.has_key("arcgis_attachments"):
+            if json_data["arcgis_attachments"]:
+                sql += " returning id"
 
         return sql
 
@@ -254,9 +257,12 @@ def getSQLValuesString(row, json_data, domain_values):
                     elif tipo == "bool":
                         str_values += dict_bool[value] + ","
                     elif tipo == "domain_value":
-                        domain = json_data["fields"][i][3]
-                        dict_values = domain_values[domain]
-                        str_values += str(dict_values[str(value)]) + ","
+                        if domain_values is not None:
+                            domain = json_data["fields"][i][3]
+                            dict_values = domain_values[domain]
+                            str_values += str(dict_values[str(value)]) + ","
+                        else:
+                            str_values += "NULL,"
                     elif tipo == "geometry":
                         str_values += "ST_GeomFromText('" + value + "',31984),"
 
@@ -309,21 +315,28 @@ def getQueryFields(field_map):
     except:
         raise
 
-def LoadAttachments(feature_id, objectid, json_data, pgsql_cursor):
+def LoadAttachments(dict_oidxid, json_data, pgsql_conn):
     try:
         insert_sql = "insert into {}.{}_anexos (id_{}, anexo_nome, anexo_dados) values (%s, %s, %s)".format(json_data["pgsql_schema"], 
                                                                                                 json_data["pgsql_table"], 
                                                                                                 json_data["pgsql_table"])
         att_table_origin = json_data['arcgis_connection_file'] + '/' + \
                                     json_data['arcgis_layer'] + "__ATTACH"
-        
-        where = "REL_OBJECTID = {}".format(str(objectid))
-        #f = magic.Magic(uncompress=True, mime=True)
+        pgsql_cursor = pgsql_conn.cursor()
 
-        with arcpy.da.SearchCursor(att_table_origin, ['DATA', 'ATT_NAME', 'ATTACHMENTID'], where_clause=where) as cursor:
+        arqlog.gera("Processando os anexos...")
+        total_records = str(int(arcpy.GetCount_management(att_table_origin).getOutput(0)))
+        current_reg = 1
+
+        with arcpy.da.SearchCursor(att_table_origin, ['REL_OBJECTID','DATA', 'ATT_NAME', 'ATTACHMENTID']) as cursor:
             for att in cursor:
-                #mime_type = f.from_buffer(att[0])
-                pgsql_cursor.execute(insert_sql, (feature_id, att[1], att[0]))
+                oid = str(att[0])
+                if dict_oidxid.has_key(oid):
+                    id = dict_oidxid[oid]
+                    reg_counter = "anexo {} de {}".format(str(current_reg), total_records)
+                    arqlog.gera("{} - OID: {} - ID: {} - Anexo: {}".format(reg_counter, oid, id, unidecode(att[2])))
+                    pgsql_cursor.execute(insert_sql, (id, att[2], att[1]))
+                    current_reg += 1
 
     except:
         raise
@@ -395,105 +408,121 @@ def main():
             # loop over json files
             script_folder = os.path.dirname(os.path.realpath(__file__))
             jsonfiles_folder = script_folder + "/maps"
+            errors = 0
 
             for jsonfile in jsonfiles:
-                arqlog.gera("Processando a carga mapeada em {}...".format(jsonfile))
+                try:
 
-                arqlog.gera("Carregando configurações do mapeamento...")
-                with open(jsonfiles_folder + "/" + jsonfile) as jsonfiledata:
-                    json_data = json.load(jsonfiledata)
+                    arqlog.gera("Processando a carga mapeada em {}...".format(jsonfile))
+
+                    arqlog.gera("Carregando configurações do mapeamento...")
+                    with open(jsonfiles_folder + "/" + jsonfile) as jsonfiledata:
+                        json_data = json.load(jsonfiledata)
+                    
+                    if json_data['type'] == 'layer': # caso o json seja de uma camada
+
+                        arqlog.gera("Criando camada...")
+                        createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
+
+                        arqlog.gera("Extraindo dados para a carga da camada {}".format(json_data['pgsql_table']))
+                        feature_class = json_data['arcgis_connection_file'] + '/' + \
+                                        json_data['arcgis_dataset'] + '/' + \
+                                        json_data['arcgis_layer']
+                        
+                        arqlog.gera("Construindo comando insert padrão...")
+                        insert_string = PrepareSQLInsert(json_data)
+
+                        arqlog.gera("Identificando os campos de consulta...")
+                        query_fieds = getQueryFields(json_data["fields"])
+
+                        arqlog.gera("Carregando os domínios de valores para a camada...")
+                        domains = LoadDomains(json_data["fields"])
+                        
+                        arqlog.gera("Recuperando o total de feições a exportar...")
+                        # total_records = int(arcpy.GetCount_management(feature_class).getOutput(0))
+                        rows = [row for row in arcpy.da.SearchCursor(in_table=feature_class, 
+                                                    field_names=query_fieds, 
+                                                    where_clause=json_data['where_clause'])]
+                        total_records = len(rows)
+                        
+                        count = 1
+                        bad_geometries = 0
+
+                        arqlog.gera("Exportando um total de " + str(total_records) + " feições e seus anexos...")
+                        dict_oidxid = {}
+
+                        for row in rows:
+                            progress_print(count, total_records)
+                            ret = getSQLValuesString(row, json_data, domains)
+
+                            if ret["result"] == "OK":
+                                final_insert_string = insert_string.format(ret["value"]) # completa a string de insert
+                                pgsql_cursor.execute(final_insert_string)
+
+                                if json_data["arcgis_attachments"]:
+                                    inserted_id = pgsql_cursor.fetchone()[0]
+                                    dict_oidxid[str(ret["objectid"])] = str(inserted_id)
+                                    #LoadAttachments(inserted_id, ret["objectid"], json_data, pgsql_cursor)
+
+                                count += 1
+                            else:
+                                arqlog.gera("ERRO:" + ret["message"])
+                                bad_geometries += 1
+                        
+                        arqlog.gera("Total de geometrias ruins: " + str(bad_geometries))
+
+                        LoadAttachments(dict_oidxid, json_data, pgsql_conn)
+
+
+                    elif json_data['type'] == 'sicat_table': # caso o json seja de uma tabela SICAT/SISCOM
+                        
+                        arqlog.gera("Criando tabela {} caso não exista...".format(json_data['pgsql_table']))
+                        createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
+
+                        arqlog.gera("Calculando numero de registros a extrair...")
+                        total_records = getSICATNumRows(sicat_conn, json_data)
+
+                        arqlog.gera("Extraindo dados da tabela de origem {}...".format(json_data['mssql_table']))
+                        cursor = getSICATData(sicat_conn, json_data)
+
+                        arqlog.gera("Construindo comando insert padrão...")
+                        sql_insert_original = PrepareSQLInsert(json_data)
+
+                        arqlog.gera("Exportando um total de " + str(total_records) + " registros...")
+                        count = 1
+                        for row in cursor.fetchall():
+                            progress_print(count, total_records)
+                            sql_insert = sql_insert_original
+                            ret = getSQLValuesString(row, json_data, None)
+                            if ret["result"] == "OK":
+                                sql_insert = sql_insert.format(ret["value"])
+                                pgsql_cursor.execute(sql_insert)
+                                count += 1
+                            else:
+                                arqlog.gera("ERRO:" + ret["message"])
+                        
+                        del cursor
+                    
+                    elif json_data['type'] == 'domain_values': # caso o json seja de um domínio de valores
+
+                        arqlog.gera("Criando domínio de valores {}...".format(unidecode(json_data['name'])))
+                        createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
+                        
+                    # efetua o commit da camada
+                    arqlog.gera("Efetuando o commit...")
+                    pgsql_conn.commit()
                 
-                if json_data['type'] == 'layer': # caso o json seja de uma camada
-
-                    arqlog.gera("Criando camada...")
-                    createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
-
-                    arqlog.gera("Extraindo dados para a carga da camada {}".format(json_data['pgsql_table']))
-                    feature_class = json_data['arcgis_connection_file'] + '/' + \
-                                    json_data['arcgis_dataset'] + '/' + \
-                                    json_data['arcgis_layer']
-                    
-                    arqlog.gera("Construindo comando insert padrão...")
-                    insert_string = PrepareSQLInsert(json_data)
-
-                    arqlog.gera("Identificando os campos de consulta...")
-                    query_fieds = getQueryFields(json_data["fields"])
-
-                    arqlog.gera("Carregando os domínios de valores para a camada...")
-                    domains = LoadDomains(json_data["fields"])
-                    
-                    arqlog.gera("Recuperando o total de feições a exportar...")
-                    # total_records = int(arcpy.GetCount_management(feature_class).getOutput(0))
-                    rows = [row for row in arcpy.da.SearchCursor(in_table=feature_class, 
-                                                field_names=query_fieds, 
-                                                where_clause=json_data['where_clause'])]
-                    total_records = len(rows)
-                    
-                    count = 1
-                    bad_geometries = 0
-
-                    arqlog.gera("Exportando um total de " + str(total_records) + " feições...")
-
-                    for row in rows:
-                        progress_print(count, total_records)
-                        ret = getSQLValuesString(row, json_data, domains)
-
-                        if ret["result"] == "OK":
-                            final_insert_string = insert_string.format(ret["value"]) # completa a string de insert
-                            pgsql_cursor.execute(final_insert_string)
-
-                            if json_data["arcgis_attachments"]:
-                                arqlog.gera("Carregando anexos da feição (OID: {})".format(str(ret["objectid"])))
-                                inserted_id = pgsql_cursor.fetchone()[0]
-                                LoadAttachments(inserted_id, ret["objectid"], json_data, pgsql_cursor)
-
-                            count += 1
-                        else:
-                            arqlog.gera("ERRO:" + ret["message"])
-                            bad_geometries += 1
-                    
-                    arqlog.gera("Total de geometrias ruins: " + str(bad_geometries))
-
-
-                elif json_data['type'] == 'sicat_table': # caso o json seja de uma tabela SICAT/SISCOM
-                    
-                    arqlog.gera("Criando tabela {} caso não exista...".format(json_data['pgsql_table']))
-                    createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
-
-                    arqlog.gera("Calculando numero de registros a extrair...")
-                    total_records = getSICATNumRows(sicat_conn, json_data)
-
-                    arqlog.gera("Extraindo dados da tabela de origem {}...".format(json_data['mssql_table']))
-                    cursor = getSICATData(sicat_conn, json_data)
-
-                    arqlog.gera("Construindo comando insert padrão...")
-                    sql_insert_original = PrepareSQLInsert(json_data)
-
-                    arqlog.gera("Exportando um total de " + str(total_records) + " registros...")
-                    count = 1
-                    for row in cursor.fetchall():
-                        progress_print(count, total_records)
-                        sql_insert = sql_insert_original
-                        ret = getSQLValuesString(row, json_data)
-                        if ret["result"] == "OK":
-                            sql_insert = sql_insert.format(ret["value"])
-                            pgsql_cursor.execute(sql_insert)
-                            count += 1
-                        else:
-                            arqlog.gera("ERRO:" + ret["message"])
-                
-                elif json_data['type'] == 'domain_values': # caso o json seja de um domínio de valores
-
-                    arqlog.gera("Criando domínio de valores {}...".format(unidecode(json_data['name'])))
-                    createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
-                    
-                # efetua o commit da camada
-                arqlog.gera("Efetuando o commit...")
-                pgsql_conn.commit()
+                except Exception as e:
+                    arqlog.gera("ERRO NO PROCESSAMENTO DO ARQUIVO {}: {}".format(jsonfile, str(e)))
+                    errors += 1
+                    pass
                 
             sicat_conn.close()
             pgsql_conn.close()
-            arqlog.gera("### CARGA CONCLUÍDA COM SUCESSO! ###")
+            if errors > 0:
+                arqlog.gera("### CARGA CONCLUÍDA COM {} ERROS ###".format(str(errors)))
+            else:
+                arqlog.gera("### CARGA CONCLUÍDA COM SUCESSO! ###")
     
     except Exception as e:
         print("ERRO NO PROCESSAMENTO:\r\n" + str(e))
