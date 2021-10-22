@@ -462,7 +462,6 @@ def main():
                                 if json_data["arcgis_attachments"]:
                                     inserted_id = pgsql_cursor.fetchone()[0]
                                     dict_oidxid[str(ret["objectid"])] = str(inserted_id)
-                                    #LoadAttachments(inserted_id, ret["objectid"], json_data, pgsql_cursor)
 
                                 count += 1
                             else:
@@ -471,7 +470,8 @@ def main():
                         
                         arqlog.gera("Total de geometrias ruins: " + str(bad_geometries))
 
-                        LoadAttachments(dict_oidxid, json_data, pgsql_conn)
+                        if json_data["arcgis_attachments"]:
+                            LoadAttachments(dict_oidxid, json_data, pgsql_conn)
 
 
                     elif json_data['type'] == 'sicat_table': # caso o json seja de uma tabela SICAT/SISCOM
