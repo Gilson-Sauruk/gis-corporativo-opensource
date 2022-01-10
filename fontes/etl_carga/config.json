@@ -1,7 +1,6 @@
 {
     "pg_database": {
-        "host_": "sgbd-dev-postgis.sistemas.cesan.com.br",
-        "host": "localhost",
+        "host": "sgbd-dev-postgis.sistemas.cesan.com.br",
         "database": "postgres",
         "user": "postgres",
         "password": "postgis",
