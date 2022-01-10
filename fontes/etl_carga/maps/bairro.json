@@ -1,0 +1,16 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Bairro",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "bairro", 
+    "pgsql_create_table_script": "bairro.sql",
+    "fields": [
+        ["NOME", "nome", "text"],
+        ["CODIGO", "codigo", "numeric"],
+        ["SHAPE@WKT", "geometry", "geometry"]
+    ]
+}
