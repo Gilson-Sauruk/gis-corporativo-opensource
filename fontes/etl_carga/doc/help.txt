@@ -11,7 +11,7 @@ Libraries não nativas:
     
 Uso:
 
-python etlcarga.py [--rebuildsde] [--jsonfile <json_file.json>] [--jsonprefix <file_name_prefix>] [--dontcreateschema]
+python etlcarga.py [--rebuildsde] [--jsonfile <json_file.json>] [--jsonprefix <file_name_prefix>] [--dontcreateschema] [--buildfromgdb]
 
 rebuildsde: apaga e recria os arquivos SDE de conexão com o
             geodatabase ArcGIS com os parâmetros configurados no
@@ -22,3 +22,5 @@ jsonfile: processa apenas o arquivo json especificado
 jsonprefix: seleciona apenas os arquivos json cujos nomes iniciam com o prefixo informado (ex: --jsonprefix dom_)
 
 dontcreateschema: pula a etapa de apagar e criar os esquemas no PostGIS
+
+buildfromgdb: importa os dados geoespacias a partir de um FileGeodataBase ArcGIS local

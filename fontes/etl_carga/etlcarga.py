@@ -10,7 +10,7 @@ from log_class import Log
 def LoadParameters(args):
     try:
         dict_ret = {}
-        valid_pars = ["rebuildsde", "help", "jsonfile", "dontcreateschema", "jsonprefix"]
+        valid_pars = ["rebuildsde", "help", "jsonfile", "dontcreateschema", "jsonprefix", "buildfromgdb"]
         if len(args) > 1:
             del args[0]
             s_args = u" ".join(args)
@@ -352,6 +352,7 @@ def main():
         p_createschema = True
         p_jason_file = None
         p_jason_prefix = None
+        build_from_gdb = False
 
         # abre o arquivo de log
         arqlog = Log()
@@ -374,6 +375,8 @@ def main():
                 p_createschema = False
             if pars.has_key("jsonprefix"):
                 p_jason_prefix = pars["jsonprefix"]
+            if pars.has_key("buildfromgdb"):
+                build_from_gdb = True
 
         if continua:
             
@@ -425,9 +428,12 @@ def main():
                         createPGSQLTable(json_data['pgsql_create_table_script'], pgsql_conn)
 
                         arqlog.gera("Extraindo dados para a carga da camada {}".format(json_data['pgsql_table']))
-                        feature_class = json_data['arcgis_connection_file'] + '/' + \
-                                        json_data['arcgis_dataset'] + '/' + \
-                                        json_data['arcgis_layer']
+                        if build_from_gdb:
+                            feature_class = str(json_data['arcgis_connection_file']).replace('.sde', '.gdb') + '/' + str(json_data['arcgis_layer'])[::-1].split('.')[0][::-1]
+                        else:
+                            feature_class = json_data['arcgis_connection_file'] + '/' + \
+                                            json_data['arcgis_dataset'] + '/' + \
+                                            json_data['arcgis_layer']
                         
                         arqlog.gera("Construindo comando insert padrão...")
                         insert_string = PrepareSQLInsert(json_data)
@@ -437,14 +443,14 @@ def main():
 
                         arqlog.gera("Carregando os domínios de valores para a camada...")
                         domains = LoadDomains(json_data["fields"])
-                        
+
                         arqlog.gera("Recuperando o total de feições a exportar...")
                         # total_records = int(arcpy.GetCount_management(feature_class).getOutput(0))
-                        rows = [row for row in arcpy.da.SearchCursor(in_table=feature_class, 
-                                                    field_names=query_fieds, 
+                        rows = [row for row in arcpy.da.SearchCursor(in_table=feature_class,
+                                                    field_names=query_fieds,
                                                     where_clause=json_data['where_clause'])]
                         total_records = len(rows)
-                        
+
                         count = 1
                         bad_geometries = 0
 
@@ -516,7 +522,7 @@ def main():
                     arqlog.gera("ERRO NO PROCESSAMENTO DO ARQUIVO {}: {}".format(jsonfile, str(e)))
                     errors += 1
                     pass
-                
+
             sicat_conn.close()
             pgsql_conn.close()
             if errors > 0:
