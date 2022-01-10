@@ -1,8 +1,9 @@
 {
     "pg_database": {
-        "host": "sgbd-dev-postgis.sistemas.cesan.com.br",
-        "database": "postgres", 
-        "user": "postgres", 
+        "host_": "sgbd-dev-postgis.sistemas.cesan.com.br",
+        "host": "localhost",
+        "database": "postgres",
+        "user": "postgres",
         "password": "postgis",
         "schemas": {
                     "cadastro": "postgres",
@@ -13,12 +14,12 @@
     "arcgis_databases": {
         "servidor": "sgbd-gis.cesan.com.br",
         "core_database": "gisc_core",
-        "carto_database": "gisc_core",
-        "service": "sde:sqlserver:sgbd-gis.cesan.com.br\\gis",
+        "carto_database": "gisc_carto",
+        "service": "sde:sqlserver:sgbd-dev-gis.cesan.com.br\\gis",
         "usuario": "ugisc",
-        "password": "2pel4ol!"
+        "password": "uGISc_dev2@15"
     },
     "sicat_database": {
-        "conn_string": "Driver={SQL Server}; Server=sgbd-sicatqry.sistemas.cesan.com.br\\sicat; Database=SICAT; Trusted_Connection=yes;"
+        "conn_string": "Driver={SQL Server}; Server=sgbd-sicatqry.sistemas.cesan.com.br\\sicat; Database=SICAT; Uid=gisc_user;Pwd=gisc;"
     }
 }
