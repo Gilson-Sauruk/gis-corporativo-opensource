@@ -1,9 +1,0 @@
-{
-    "type": "domain_values",
-    "name": "Acionamento",
-    "pgsql_create_table_script": "dom_acionamento.sql",
-    "from_to_values": {
-        "A": 1,
-        "I": 2
-    }
-}
