@@ -1,7 +1,7 @@
 {
     "pg_database": {
         "host": "sgbd-dev-postgis.sistemas.cesan.com.br",
-        "database": "postgres",
+        "database": "pgvix",
         "user": "postgres",
         "password": "postgis",
         "schemas": {
