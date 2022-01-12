@@ -1,3 +1,4 @@
+drop table if exists cartografia.municipio;
 create table if not exists cartografia.municipio (
 	id bigserial primary key,
 	nome varchar(30) not null,
