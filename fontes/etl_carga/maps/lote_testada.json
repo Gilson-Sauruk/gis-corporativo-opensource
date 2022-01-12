@@ -1,0 +1,28 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Lote_Testada",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "lote_testada",
+    "pgsql_create_table_script": "lote_testada.sql",
+    "fields": [
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "DESCRICAO",
+            "descricao",
+            "text"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
