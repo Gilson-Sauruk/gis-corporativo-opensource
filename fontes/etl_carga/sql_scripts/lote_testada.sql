@@ -1,7 +1,7 @@
 drop table if exists cartografia.lote_testada;
 
 create table if not exists cartografia.lote_testada (
-    id bigserial primary key,
+    id serial primary key,
     data date null ,
     descricao varchar (200) null ,
     geometry geometry('MULTILINESTRING', 31984)

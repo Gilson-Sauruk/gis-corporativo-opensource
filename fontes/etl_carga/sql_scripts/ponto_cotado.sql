@@ -1,7 +1,7 @@
 drop table if exists cartografia.ponto_cotado;
 
 create table if not exists cartografia.ponto_cotado (
-    id bigserial primary key,
+    id serial primary key,
     elevacao numeric (38, 8) null ,
     data date null ,
     geometry geometry('POINT', 31984)

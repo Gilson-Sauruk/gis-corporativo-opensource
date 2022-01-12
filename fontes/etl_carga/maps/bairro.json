@@ -6,11 +6,28 @@
     "arcgis_attachments": false,
     "where_clause": null,
     "pgsql_schema": "cartografia",
-    "pgsql_table": "bairro", 
+    "pgsql_table": "bairro",
     "pgsql_create_table_script": "bairro.sql",
     "fields": [
-        ["NOME", "nome", "text"],
-        ["CODIGO", "codigo", "numeric"],
-        ["SHAPE@WKT", "geometry", "geometry"]
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "CODIGO",
+            "codigo",
+            "numeric"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
     ]
 }

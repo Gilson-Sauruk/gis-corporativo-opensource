@@ -1,7 +1,7 @@
 drop table if exists cartografia.quadra;
 
 create table if not exists cartografia.quadra (
-    id bigserial primary key,
+    id serial primary key,
     data date null ,
     geometry geometry('MULTIPOLYGON', 31984)
 );
