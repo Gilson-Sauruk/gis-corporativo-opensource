@@ -14,7 +14,7 @@ create table if not exists cartografia.municipio (
     cod_uf numeric (38, 8) null ,
     codigo_ibge numeric (10, 0) null ,
     ano_ref date null ,
-    geometry geometry('POLYGON', 31984)
+    geometry geometry('MULTIPOLYGON', 31984)
 );
 
 truncate table cartografia.municipio;
