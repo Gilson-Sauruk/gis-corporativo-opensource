@@ -1,0 +1,28 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Sede_Distrital",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "sede_distrital",
+    "pgsql_create_table_script": "sede_distrital.sql",
+    "fields": [
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "DATA",
+            "data",
+            "numeric"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
