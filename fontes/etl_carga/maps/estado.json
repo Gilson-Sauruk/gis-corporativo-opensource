@@ -1,0 +1,43 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Estado",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "estado",
+    "pgsql_create_table_script": "estado.sql",
+    "fields": [
+        [
+            "COD_IBGE",
+            "cod_ibge",
+            "numeric"
+        ],
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "AREA_IBGE",
+            "area_ibge",
+            "numeric"
+        ],
+        [
+            "COD_SAP",
+            "cod_sap",
+            "numeric"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
