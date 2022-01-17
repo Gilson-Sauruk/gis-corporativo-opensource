@@ -1,0 +1,28 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Curva_de_Nivel_Mestra_10x10",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "curva_de_nivel_mestra_10x10",
+    "pgsql_create_table_script": "curva_de_nivel_mestra_10x10.sql",
+    "fields": [
+        [
+            "DATA",
+            "data",
+            "text"
+        ],
+        [
+            "ELEVACAO",
+            "elevacao",
+            "numeric"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
