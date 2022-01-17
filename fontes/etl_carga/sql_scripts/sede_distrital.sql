@@ -2,7 +2,7 @@ drop table if exists cartografia.sede_distrital;
 
 create table if not exists cartografia.sede_distrital (
     id serial primary key,
-    nome varchar (30) nullnot null ,
+    nome varchar (30) null ,
     data numeric (38, 8) null ,
     geometry geometry('POINT', 31984)
 );
