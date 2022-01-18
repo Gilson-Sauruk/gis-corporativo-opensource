@@ -1,0 +1,33 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Diretoria",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "diretoria",
+    "pgsql_create_table_script": "diretoria.sql",
+    "fields": [
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "SIGLA",
+            "sigla",
+            "text"
+        ],
+        [
+            "CODIGO_SAP",
+            "codigo_sap",
+            "numeric"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
