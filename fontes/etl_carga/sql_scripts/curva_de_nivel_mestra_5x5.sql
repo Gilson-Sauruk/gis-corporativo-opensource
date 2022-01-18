@@ -4,7 +4,7 @@ create table if not exists cartografia.curva_de_nivel_mestra_5x5 (
     id serial primary key,
     elevacao numeric (10, 0) null ,
     data date null ,
-    geometry geometry('MULTILINESTRING', 31984)
+    geometry geometry('MULTILINESTRINGZM', 31984)
 );
 
 truncate table cartografia.curva_de_nivel_mestra_5x5;
