@@ -264,7 +264,7 @@ def getSQLValuesString(row, json_data, domain_values):
                         else:
                             str_values += "NULL,"
                     elif tipo == "geometry":
-                        str_values += "ST_GeomFromText('" + value + "',31984),"
+                        str_values += "ST_GeomFromText('" + str(value).replace('NAN', '-1') + "',31984),"
 
             i += 1
 
