@@ -1,0 +1,43 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Distrito",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "distrito",
+    "pgsql_create_table_script": "distrito.sql",
+    "fields": [
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "CODIGO_SAP",
+            "codigo_sap",
+            "numeric"
+        ],
+        [
+            "POPULACAO",
+            "populacao",
+            "numeric"
+        ],
+        [
+            "ANO_REFERENCIA",
+            "ano_referencia",
+            "date"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
