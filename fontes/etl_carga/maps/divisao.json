@@ -1,0 +1,53 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Divisao",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "divisao",
+    "pgsql_create_table_script": "divisao.sql",
+    "fields": [
+        [
+            "SIGLA",
+            "sigla",
+            "text"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "GERENCIA",
+            "gerencia",
+            "numeric"
+        ],
+        [
+            "DIRETORIA",
+            "diretoria",
+            "numeric"
+        ],
+        [
+            "CODIGO_SAP",
+            "codigo_sap",
+            "numeric"
+        ],
+        [
+            "CODIGO",
+            "codigo",
+            "numeric"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
