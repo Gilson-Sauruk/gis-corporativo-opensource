@@ -2,9 +2,9 @@ drop table if exists cartografia.curva_de_nivel_mestra_10x10;
 
 create table if not exists cartografia.curva_de_nivel_mestra_10x10 (
     id serial primary key,
-    data date null ,
+    data varchar (254) null ,
     elevacao numeric (38, 8) null ,
-    geometry geometry('MULTILINESTRINGZM', 31984)
+    geometry geometry('MULTILINESTRING', 31984)
 );
 
 truncate table cartografia.curva_de_nivel_mestra_10x10;
