@@ -1,0 +1,43 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Gerencia",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "gerencia",
+    "pgsql_create_table_script": "gerencia.sql",
+    "fields": [
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "SIGLA",
+            "sigla",
+            "text"
+        ],
+        [
+            "COD_SAP",
+            "cod_sap",
+            "numeric"
+        ],
+        [
+            "DIRETORIA",
+            "diretoria",
+            "numeric"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
