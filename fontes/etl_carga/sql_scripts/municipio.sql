@@ -1,7 +1,7 @@
 drop table if exists cartografia.municipio;
 
 create table if not exists cartografia.municipio (
-    id bigserial primary key,
+    id serial primary key,
     nome varchar (30) null ,
     area_ibge numeric (38, 8) null ,
     data_criac date null ,
