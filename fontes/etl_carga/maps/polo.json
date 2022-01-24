@@ -1,0 +1,48 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Polo",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "polo",
+    "pgsql_create_table_script": "polo.sql",
+    "fields": [
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "SIGLA",
+            "sigla",
+            "text"
+        ],
+        [
+            "DIRETORIA",
+            "diretoria",
+            "numeric"
+        ],
+        [
+            "GERENCIA",
+            "gerencia",
+            "numeric"
+        ],
+        [
+            "DIVISAO",
+            "divisao",
+            "numeric"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
