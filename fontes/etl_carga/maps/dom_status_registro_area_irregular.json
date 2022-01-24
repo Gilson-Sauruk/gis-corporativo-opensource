@@ -1,0 +1,11 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Registro Area Irregular",
+    "pgsql_create_table_script": "dom_status_registro_area_irregular.sql",
+    "from_to_values": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4
+    }
+}
