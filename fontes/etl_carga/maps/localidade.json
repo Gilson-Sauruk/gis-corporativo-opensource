@@ -1,0 +1,33 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Localidade",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "localidade",
+    "pgsql_create_table_script": "localidade.sql",
+    "fields": [
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "CODIGO",
+            "codigo",
+            "numeric"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
