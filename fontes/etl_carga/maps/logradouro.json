@@ -1,0 +1,58 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Logradouro",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "logradouro",
+    "pgsql_create_table_script": "logradouro.sql",
+    "fields": [
+        [
+            "NOME_RUA",
+            "nome_rua",
+            "text"
+        ],
+        [
+            "NATUREZA",
+            "natureza",
+            "numeric"
+        ],
+        [
+            "NOME_CESAN",
+            "nome_cesan",
+            "text"
+        ],
+        [
+            "CODIGO",
+            "codigo",
+            "numeric"
+        ],
+        [
+            "LEI",
+            "lei",
+            "text"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "OID_CARGA",
+            "oid_carga",
+            "numeric"
+        ],
+        [
+            "STATUS",
+            "status",
+            "text"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
