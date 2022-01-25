@@ -1,0 +1,43 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Ponto_de_Referencia",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "ponto_de_referencia",
+    "pgsql_create_table_script": "ponto_de_referencia.sql",
+    "fields": [
+        [
+            "NAT_PTO_RF",
+            "nat_pto_rf",
+            "numeric"
+        ],
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "TELEFONE",
+            "telefone",
+            "text"
+        ],
+        [
+            "EMAIL",
+            "email",
+            "text"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
