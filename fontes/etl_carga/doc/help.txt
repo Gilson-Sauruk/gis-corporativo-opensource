@@ -23,4 +23,4 @@ jsonprefix: seleciona apenas os arquivos json cujos nomes iniciam com o prefixo 
 
 dontcreateschema: pula a etapa de apagar e criar os esquemas no PostGIS
 
-buildfromgdb: importa os dados geoespacias a partir de um FileGeodataBase ArcGIS local
+buildfromgdb: importa os dados geoespaciais a partir de um FileGeodataBase ArcGIS local
