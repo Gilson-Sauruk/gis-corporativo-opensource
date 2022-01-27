@@ -222,7 +222,7 @@ def PrepareSQLInsert(json_data):
     except:
         raise
 
-def getSQLValuesString(row, json_data, domain_values):
+def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
     try:
         i = 0
         str_values = ""
@@ -260,7 +260,28 @@ def getSQLValuesString(row, json_data, domain_values):
                         if domain_values is not None:
                             domain = json_data["fields"][i][3]
                             dict_values = domain_values[domain]
-                            str_values += str(dict_values[str(value)]) + ","
+                            try:
+                                if len(str(value).strip()) == 0:  # consider empty value to null value
+                                    str_values += "NULL,"
+                                else:
+                                    str_values += str(dict_values[str(value)]) + ","
+                            except KeyError as e:
+                                try:
+                                    # translate desc to value ArcGIS Domain
+                                    ags_database = unidecode(json_data['arcgis_connection_file']).lower()
+                                    ags_dataset = unidecode(json_data['arcgis_dataset']).lower()
+                                    ags_fc = unidecode(json_data['arcgis_layer']).lower()
+                                    ags_domain = unidecode(json_data['fields'][i][3]).lower().replace('dom_','')
+                                    ags_field = unidecode(json_data['fields'][i][1]).lower().replace('id_','')
+                                    ags_desc = unidecode(value).lower()
+                                    ags_value = domain_values_ags[ags_database][ags_dataset][ags_fc][ags_domain][ags_field][ags_desc]
+                                    str_values += str(dict_values[str(ags_value)]) + ","
+                                except KeyError as e:
+                                    raise Exception(
+                                        "Erro ao resgatar valor de dominio para a chave: '%s'" % str(e.args[0]))
+                                except Exception as e:
+                                    raise Exception(
+                                        "Erro ao resgatar valor de dominio para a chave: '%s'" % str(value))
                         else:
                             str_values += "NULL,"
                     elif tipo == "geometry":
@@ -340,6 +361,50 @@ def LoadAttachments(dict_oidxid, json_data, pgsql_conn):
 
     except:
         raise
+
+def LoadAGSDomains(database, fds, fcls):
+    hsh = {}
+    try:
+        normdatabase = unidecode(database).lower()
+        # set workspace
+        arcpy.env.workspace = database
+        # list datasets
+        datasets = arcpy.ListDatasets(wild_card=fds, feature_type='Feature')
+        for dataset in datasets:
+            normdataset = unidecode(dataset).lower()
+            # list featureclasses
+            featureclasses = arcpy.ListFeatureClasses(wild_card=fcls, feature_dataset=dataset)
+            for fc in featureclasses:
+                normfc = unidecode(fc).lower()
+                # list fields
+                fields = arcpy.ListFields(fc)
+                for field in fields:
+                    if field.domain != '':
+                        # set hash for databse
+                        if normdatabase not in hsh.keys(): hsh[normdatabase] = {}
+                        # set hash for dataset
+                        if normdataset not in hsh[normdatabase].keys(): hsh[normdatabase][normdataset] = {}
+                        # set hash for featureclass
+                        if normfc not in hsh[normdatabase][normdataset].keys(): hsh[normdatabase][normdataset][normfc] = {}
+                        # set hash for domainame
+                        normdomainname = unidecode(field.domain).lower()
+                        if normdomainname not in hsh[normdatabase][normdataset][normfc].keys(): hsh[normdatabase][normdataset][normfc][normdomainname] = {}
+                        # get domain values and desc
+                        domains = arcpy.da.ListDomains()
+                        for domain in domains:
+                            if domain.domainType == 'CodedValue':
+                                coded_values = domain.codedValues
+                                for val, desc in coded_values.items():
+                                    if domain.name == field.domain:
+                                        normfieldname = unidecode(field.name).lower()
+                                        # set hash
+                                        if normfieldname not in hsh[normdatabase][normdataset][normfc][normdomainname].keys(): hsh[normdatabase][normdataset][normfc][normdomainname][normfieldname] = {}
+                                        # get val and desc
+                                        normdesc = unidecode(desc).lower()
+                                        hsh[normdatabase][normdataset][normfc][normdomainname][normfieldname][normdesc] = val
+    except:
+        pass
+    return hsh
 
 def main():
     try:
@@ -444,6 +509,11 @@ def main():
                         arqlog.gera("Carregando os domínios de valores para a camada...")
                         domains = LoadDomains(json_data["fields"])
 
+                        arqlog.gera("Carregando os domínios de valores (ArcGIS) para a camada...")
+                        domainsAGS = LoadAGSDomains(database=json_data['arcgis_connection_file'],
+                                                    fds=json_data['arcgis_dataset'],
+                                                    fcls=json_data['arcgis_layer'])
+
                         arqlog.gera("Recuperando o total de feições a exportar...")
                         # total_records = int(arcpy.GetCount_management(feature_class).getOutput(0))
                         rows = [row for row in arcpy.da.SearchCursor(in_table=feature_class,
@@ -459,7 +529,7 @@ def main():
 
                         for row in rows:
                             progress_print(count, total_records)
-                            ret = getSQLValuesString(row, json_data, domains)
+                            ret = getSQLValuesString(row, json_data, domains, domainsAGS)
 
                             if ret["result"] == "OK":
                                 final_insert_string = insert_string.format(ret["value"]) # completa a string de insert
