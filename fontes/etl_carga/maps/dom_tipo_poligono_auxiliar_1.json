@@ -1,0 +1,11 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipo Poligono Auxiliar 1",
+    "pgsql_create_table_script": "dom_tipo_poligono_auxiliar_1.sql",
+    "from_to_values": {
+        "AI": 1,
+        "AP": 2,
+        "OU": 3,
+        "PE": 4
+    }
+}
