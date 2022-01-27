@@ -1,0 +1,54 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "GISC_CARTO.UGISC.AREA_PRESERVACAO",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "area_preservacao",
+    "pgsql_create_table_script": "area_preservacao.sql",
+    "fields": [
+        [
+            "DTINCLUSAO",
+            "dtinclusao",
+            "date"
+        ],
+        [
+            "DTATUALIZACAO",
+            "dtatualizacao",
+            "date"
+        ],
+        [
+            "USUARIO",
+            "usuario",
+            "text"
+        ],
+        [
+            "TIPO",
+            "id_tipo",
+            "domain_value",
+            "dom_tipo_poligono_auxiliar_1"
+        ],
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "DESCRICAO",
+            "descricao",
+            "text"
+        ],
+        [
+            "CODIGO",
+            "codigo",
+            "text"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
