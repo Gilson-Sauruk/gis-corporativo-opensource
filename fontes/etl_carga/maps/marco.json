@@ -1,0 +1,43 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Marco",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "marco",
+    "pgsql_create_table_script": "marco.sql",
+    "fields": [
+        [
+            "ELEVACAO",
+            "elevacao",
+            "numeric"
+        ],
+        [
+            "TIPO_ELEM",
+            "tipo_elem",
+            "text"
+        ],
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "DATA_IMPL",
+            "data_impl",
+            "date"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
