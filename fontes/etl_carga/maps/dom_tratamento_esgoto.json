@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tratamento Esgoto",
+    "pgsql_create_table_script": "dom_tratamento_esgoto.sql",
+    "from_to_values": {
+        "NAO": 1,
+        "SIM": 2
+    }
+}
