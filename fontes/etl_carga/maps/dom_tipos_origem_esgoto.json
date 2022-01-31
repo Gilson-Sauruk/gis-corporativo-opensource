@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Origem Esgoto",
+    "pgsql_create_table_script": "dom_tipos_origem_esgoto.sql",
+    "from_to_values": {
+        "1": 1,
+        "2": 2
+    }
+}
