@@ -266,6 +266,9 @@ def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
                                 else:
                                     str_values += str(dict_values[str(value)]) + ","
                             except KeyError as e:
+                                arqlog.gera("O valor '%s' não foi encontrado no mapeamento de domínios '%s'." % (str(value), str(domain)))
+                                ags_database = ''
+                                ags_domain = ''
                                 try:
                                     # translate desc to value ArcGIS Domain
                                     ags_database = unidecode(json_data['arcgis_connection_file']).lower()
@@ -274,14 +277,12 @@ def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
                                     ags_domain = unidecode(json_data['fields'][i][3]).lower().replace('dom_','')
                                     ags_field = unidecode(json_data['fields'][i][1]).lower().replace('id_','')
                                     ags_desc = unidecode(value).lower()
+                                    arqlog.gera("Tentando deduzir o valor pela descrição '%s' no dominio ArcGIS: %s.%s" % (str(value), ags_database, ags_domain))
                                     ags_value = domain_values_ags[ags_database][ags_dataset][ags_fc][ags_domain][ags_field][ags_desc]
                                     str_values += str(dict_values[str(ags_value)]) + ","
-                                except KeyError as e:
-                                    raise Exception(
-                                        "Erro ao resgatar valor de dominio para a chave: '%s'" % str(e.args[0]))
                                 except Exception as e:
-                                    raise Exception(
-                                        "Erro ao resgatar valor de dominio para a chave: '%s'" % str(value))
+                                    arqlog.gera("Descrição não encontrada para '%s' no domínio ArcGIS: %s.%s. Assumindo o valor '%s' como <NULL>." % (str(value), ags_database, ags_domain, str(value)))
+                                    str_values += "NULL,"
                         else:
                             str_values += "NULL,"
                     elif tipo == "geometry":
