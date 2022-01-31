@@ -1,0 +1,61 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "GISC_CARTO.UGISC.POLIGONO_ESGOTO",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "poligono_esgoto",
+    "pgsql_create_table_script": "poligono_esgoto.sql",
+    "fields": [
+        [
+            "DTINCLUSAO",
+            "dtinclusao",
+            "date"
+        ],
+        [
+            "DTATUALIZACAO",
+            "dtatualizacao",
+            "date"
+        ],
+        [
+            "USUARIO",
+            "usuario",
+            "text"
+        ],
+        [
+            "TIPO",
+            "id_tipo",
+            "domain_value",
+            "dom_tipo_poligono_auxiliar_1"
+        ],
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "DESCRICAO",
+            "descricao",
+            "text"
+        ],
+        [
+            "TratEsgoto",
+            "id_tratesgoto",
+            "domain_value",
+            "dom_tratamento_esgoto"
+        ],
+        [
+            "ORIGEM",
+            "id_origem",
+            "domain_value",
+            "dom_tipos_origem_esgoto"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
