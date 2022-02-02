@@ -1,0 +1,38 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_carto.sde",
+    "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
+    "arcgis_layer": "gisc_carto.UGISC.Malha_1x1km",
+    "arcgis_attachments": false,
+    "where_clause": null,
+    "pgsql_schema": "cartografia",
+    "pgsql_table": "malha_1x1km",
+    "pgsql_create_table_script": "malha_1x1km.sql",
+    "fields": [
+        [
+            "OBJECTID",
+            "objectid",
+            "objectid"
+        ],
+        [
+            "COORD_E",
+            "coord_e",
+            "numeric"
+        ],
+        [
+            "COORD_N",
+            "coord_n",
+            "numeric"
+        ],
+        [
+            "DATA",
+            "data",
+            "date"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
