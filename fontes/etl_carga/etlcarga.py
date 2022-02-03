@@ -223,6 +223,18 @@ def PrepareSQLInsert(json_data):
         raise
 
 def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
+    def castBool(val):
+        v = ''
+        try:
+            v = str(val).lower()
+        except:
+            v = unidecode(val).lower()
+        if v in ("yes", "true", "t", "1", "1.0"):
+            return "S"
+        elif v in ("no", "false", "f", "0", "0.0"):
+            return "N"
+        else:
+            return val
     try:
         i = 0
         str_values = ""
@@ -255,7 +267,7 @@ def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
                         f_date = str(value.year) + "-" + str(value.month) + "-" + str(value.day)
                         str_values += "'" + f_date + "',"
                     elif tipo == "bool":
-                        str_values += dict_bool[value] + ","
+                        str_values += dict_bool[castBool(value)] + ","
                     elif tipo == "domain_value":
                         if domain_values is not None:
                             domain = json_data["fields"][i][3]
