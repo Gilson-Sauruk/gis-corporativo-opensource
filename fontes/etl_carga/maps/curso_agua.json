@@ -6,8 +6,8 @@
     "arcgis_attachments": false,
     "where_clause": null,
     "pgsql_schema": "cartografia",
-    "pgsql_table": "malha_curso_agua",
-    "pgsql_create_table_script": "malha_curso_agua.sql",
+    "pgsql_table": "curso_agua",
+    "pgsql_create_table_script": "curso_agua.sql",
     "fields": [
         [
             "OBJECTID",
