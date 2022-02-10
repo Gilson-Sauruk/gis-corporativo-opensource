@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Elevacao 1",
+    "pgsql_create_table_script": "dom_status_elevacao_1.sql",
+    "from_to_values": {
+        "A": 1,
+        "S": 2,
+        "M": 3
+    }
+}
