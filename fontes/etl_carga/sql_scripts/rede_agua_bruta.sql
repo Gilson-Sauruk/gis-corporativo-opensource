@@ -19,7 +19,7 @@ create table if not exists cadastro.rede_agua_bruta (
     data_inst_geo date null,
     id_rede numeric (10, 0) null,
     geometry geometry('MULTILINESTRING', 31984),
-    constraint fk_dom_status_cadastro_rede_agua_bruta foreign key ("id_status_cad") references cadastro.dom_status_cadastro (id) match simple on update no action on delete no action,
+    constraint fk_dom_status_cadastro_rede_agua_bruta foreign key ("id_status_cad") references cadastro.dom_status_cadastro_1 (id) match simple on update no action on delete no action,
     constraint fk_dom_status_operacao_rede_agua_bruta foreign key ("id_status_op") references cadastro.dom_status_operacao (id) match simple on update no action on delete no action,
     constraint fk_dom_tipos_rede_agua_bruta_rede_agua_bruta foreign key ("id_tipo") references cadastro.dom_tipos_rede_agua_bruta (id) match simple on update no action on delete no action
 );
