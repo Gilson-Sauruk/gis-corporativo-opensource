@@ -4,7 +4,7 @@ create table if not exists cadastro.rede_agua_bruta (
     id serial primary key,
     id_diam_mat numeric (10, 0) not null,
     data_inst date null,
-    id_status_cad smallint not null,
+    id_status_cad smallint null,
     id_status_op smallint not null,
     enabled boolean null default True,
     comprimento_real numeric (38, 8) null,
