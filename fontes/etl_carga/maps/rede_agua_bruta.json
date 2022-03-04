@@ -1,0 +1,106 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_core.sde",
+    "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
+    "arcgis_layer": "gisc_core.UGISC.REDE_AGUA_BRUTA",
+    "arcgis_attachments": true,
+    "where_clause": null,
+    "pgsql_schema": "cadastro",
+    "pgsql_table": "rede_agua_bruta",
+    "pgsql_create_table_script": "rede_agua_bruta.sql",
+    "fields": [
+        [
+            "OBJECTID",
+            "objectid",
+            "objectid"
+        ],
+        [
+            "ID_DIAM_MAT",
+            "id_diam_mat",
+            "numeric"
+        ],
+        [
+            "DATA_INST",
+            "data_inst",
+            "date"
+        ],
+        [
+            "STATUS_CAD",
+            "id_status_cad",
+            "domain_value",
+            "dom_status_cadastro_1"
+        ],
+        [
+            "STATUS_OP",
+            "id_status_op",
+            "domain_value",
+            "dom_status_operacao"
+        ],
+        [
+            "Enabled",
+            "enabled",
+            "bool"
+        ],
+        [
+            "COMPRIMENTO_REAL",
+            "comprimento_real",
+            "numeric"
+        ],
+        [
+            "OBS",
+            "obs",
+            "text"
+        ],
+        [
+            "TIPO",
+            "id_tipo",
+            "domain_value",
+            "dom_tipos_rede_agua_bruta"
+        ],
+        [
+            "COD_MERIDIAN",
+            "cod_meridian",
+            "text"
+        ],
+        [
+            "Inconsistente",
+            "inconsistente",
+            "numeric"
+        ],
+        [
+            "Oid_Origen",
+            "oid_origen",
+            "numeric"
+        ],
+        [
+            "DIAMETRO",
+            "diametro",
+            "text"
+        ],
+        [
+            "MATERIAL",
+            "material",
+            "text"
+        ],
+        [
+            "NUM_SS",
+            "num_ss",
+            "text"
+        ],
+        [
+            "DATA_INST_GEO",
+            "data_inst_geo",
+            "date"
+        ],
+        [
+            "ID_REDE",
+            "id_rede",
+            "numeric"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}

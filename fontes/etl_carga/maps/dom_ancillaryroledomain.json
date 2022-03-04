@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Ancillaryroledomain",
+    "pgsql_create_table_script": "dom_ancillaryroledomain.sql",
+    "from_to_values": {
+        "0": 1,
+        "1": 2,
+        "2": 3
+    }
+}

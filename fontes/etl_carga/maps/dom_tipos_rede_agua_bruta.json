@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Rede Agua Bruta",
+    "pgsql_create_table_script": "dom_tipos_rede_agua_bruta.sql",
+    "from_to_values": {
+        "P": 1,
+        "R": 2,
+        "M": 3
+    }
+}

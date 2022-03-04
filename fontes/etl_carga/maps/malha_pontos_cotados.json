@@ -2,12 +2,12 @@
     "type": "layer",
     "arcgis_connection_file": "gisc_carto.sde",
     "arcgis_dataset": "gisc_carto.UGISC.Cartografia_Base",
-    "arcgis_layer": "gisc_carto.UGISC.Curso_Agua",
+    "arcgis_layer": "gisc_carto.UGISC.Malha_Pontos_Cotados",
     "arcgis_attachments": false,
     "where_clause": null,
     "pgsql_schema": "cartografia",
-    "pgsql_table": "malha_curso_agua",
-    "pgsql_create_table_script": "malha_curso_agua.sql",
+    "pgsql_table": "malha_pontos_cotados",
+    "pgsql_create_table_script": "malha_pontos_cotados.sql",
     "fields": [
         [
             "OBJECTID",
@@ -15,29 +15,9 @@
             "objectid"
         ],
         [
-            "ID_CURSO",
-            "id_curso",
+            "ELEVACAO",
+            "elevacao",
             "numeric"
-        ],
-        [
-            "CODIGO",
-            "codigo",
-            "text"
-        ],
-        [
-            "NOME",
-            "nome",
-            "text"
-        ],
-        [
-            "REGIME",
-            "regime",
-            "text"
-        ],
-        [
-            "Enabled",
-            "enabled",
-            "bool"
         ],
         [
             "DATA",
