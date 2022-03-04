@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Cadastro",
+    "pgsql_create_table_script": "dom_status_cadastro.sql",
+    "from_to_values": {
+        "N": 1,
+        "V": 2
+    }
+}
