@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Intrumento",
+    "pgsql_create_table_script": "dom_intrumento.sql",
+    "from_to_values": {
+        "O": 1,
+        "T": 2,
+        "G": 3
+    }
+}

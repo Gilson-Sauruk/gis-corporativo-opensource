@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Prof Amarracao",
+    "pgsql_create_table_script": "dom_tipos_prof_amarracao.sql",
+    "from_to_values": {
+        "E": 1,
+        "AE": 2
+    }
+}

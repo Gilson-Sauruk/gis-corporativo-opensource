@@ -1,0 +1,12 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Distancia Amarracao",
+    "pgsql_create_table_script": "dom_tipos_distancia_amarracao.sql",
+    "from_to_values": {
+        "ED": 1,
+        "MF": 2,
+        "QU": 3,
+        "PT": 4,
+        "CD": 5
+    }
+}
