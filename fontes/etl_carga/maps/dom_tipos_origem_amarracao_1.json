@@ -1,0 +1,20 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Origem Amarracao 1",
+    "pgsql_create_table_script": "dom_tipos_origem_amarracao_1.sql",
+    "from_to_values": {
+        "EM": 1,
+        "C": 2,
+        "PV": 3,
+        "LA": 4,
+        "I": 5,
+        "OF": 6,
+        "MO": 7,
+        "L": 8,
+        "OB": 9,
+        "P": 10,
+        "V": 11,
+        "EQ": 12,
+        "CV": 13
+    }
+}
