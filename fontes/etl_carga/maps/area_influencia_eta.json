@@ -1,0 +1,63 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_core.sde",
+    "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
+    "arcgis_layer": "gisc_core.UGISC.AREA_INFLUENCIA_ETA",
+    "arcgis_attachments": true,
+    "where_clause": null,
+    "pgsql_schema": "cadastro",
+    "pgsql_table": "area_influencia_eta",
+    "pgsql_create_table_script": "area_influencia_eta.sql",
+    "fields": [
+        [
+            "OBJECTID",
+            "objectid",
+            "objectid"
+        ],
+        [
+            "NOME",
+            "nome",
+            "text"
+        ],
+        [
+            "POPULACAO",
+            "populacao",
+            "numeric"
+        ],
+        [
+            "OBS",
+            "obs",
+            "text"
+        ],
+        [
+            "Oid_Origen",
+            "oid_origen",
+            "numeric"
+        ],
+        [
+            "DTATUALIZACAO",
+            "dtatualizacao",
+            "date"
+        ],
+        [
+            "DTINCLUSAO",
+            "dtinclusao",
+            "date"
+        ],
+        [
+            "USUARIO",
+            "usuario",
+            "text"
+        ],
+        [
+            "NUM_SS",
+            "num_ss",
+            "text"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
