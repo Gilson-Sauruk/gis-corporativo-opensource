@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Funcionamento",
+    "pgsql_create_table_script": "dom_status_funcionamento.sql",
+    "from_to_values": {
+        "A": 1,
+        "I": 2
+    }
+}
