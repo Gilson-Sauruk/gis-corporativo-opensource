@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Origem Hidrante",
+    "pgsql_create_table_script": "dom_origem_hidrante.sql",
+    "from_to_values": {
+        "0": 1,
+        "1": 2,
+        "2": 3
+    }
+}
