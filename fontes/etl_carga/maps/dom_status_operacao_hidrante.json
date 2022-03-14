@@ -1,0 +1,12 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Operacao Hidrante",
+    "pgsql_create_table_script": "dom_status_operacao_hidrante.sql",
+    "from_to_values": {
+        "0": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5
+    }
+}

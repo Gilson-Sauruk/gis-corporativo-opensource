@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Hidrante",
+    "pgsql_create_table_script": "dom_tipos_hidrante.sql",
+    "from_to_values": {
+        "C": 1,
+        "S": 2
+    }
+}

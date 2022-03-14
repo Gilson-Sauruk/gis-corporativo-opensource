@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Serv Exec Hidrante",
+    "pgsql_create_table_script": "dom_tipos_serv_exec_hidrante.sql",
+    "from_to_values": {
+        "1": 1,
+        "2": 2,
+        "3": 3
+    }
+}
