@@ -2,11 +2,11 @@ drop table if exists cadastro.hidrante, cadastro.hidrante_anexos;
 
 create table if not exists cadastro.hidrante (
     id serial primary key,
-    id_tipo smallint not null,
+    id_tipo smallint null,
     id_status_elev smallint null,
     data_inst date null,
-    id_status_cad smallint not null,
-    id_status_op smallint not null,
+    id_status_cad smallint null,
+    id_status_op smallint null,
     enabled boolean null default True,
     elevacao numeric (38, 8) null,
     angulo numeric (38, 8) null,
