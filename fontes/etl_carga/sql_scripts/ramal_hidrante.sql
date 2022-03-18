@@ -2,9 +2,9 @@ drop table if exists cadastro.ramal_hidrante, cadastro.ramal_hidrante_anexos;
 
 create table if not exists cadastro.ramal_hidrante (
     id serial primary key,
-    id_diam_mat numeric (10, 0) not null,
-    id_status_cad smallint not null,
-    id_status_op smallint not null,
+    id_diam_mat numeric (10, 0) null,
+    id_status_cad smallint null,
+    id_status_op smallint null,
     enabled boolean null default True,
     cod_meridian varchar (50) null,
     obs text null,
