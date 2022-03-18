@@ -1,0 +1,65 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_core.sde",
+    "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
+    "arcgis_layer": "gisc_core.UGISC.RAMAL_HIDRANTE",
+    "arcgis_attachments": true,
+    "where_clause": null,
+    "pgsql_schema": "cadastro",
+    "pgsql_table": "ramal_hidrante",
+    "pgsql_create_table_script": "ramal_hidrante.sql",
+    "fields": [
+        [
+            "OBJECTID",
+            "objectid",
+            "objectid"
+        ],
+        [
+            "ID_DIAM_MAT",
+            "id_diam_mat",
+            "numeric"
+        ],
+        [
+            "STATUS_CAD",
+            "id_status_cad",
+            "domain_value",
+            "dom_status_cadastro"
+        ],
+        [
+            "STATUS_OP",
+            "id_status_op",
+            "domain_value",
+            "dom_status_operacao"
+        ],
+        [
+            "Enabled",
+            "enabled",
+            "bool"
+        ],
+        [
+            "COD_MERIDIAN",
+            "cod_meridian",
+            "text"
+        ],
+        [
+            "OBS",
+            "obs",
+            "text"
+        ],
+        [
+            "Oid_Origen",
+            "oid_origen",
+            "numeric"
+        ],
+        [
+            "NUM_SS",
+            "num_ss",
+            "text"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
