@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Classificacao Bomba Agua",
+    "pgsql_create_table_script": "dom_classificacao_bomba_agua.sql",
+    "from_to_values": {
+        "FA": 1,
+        "FR": 2,
+        "FM": 3
+    }
+}
