@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Funcao",
+    "pgsql_create_table_script": "dom_funcao.sql",
+    "from_to_values": {
+        "B": 1,
+        "E": 2
+    }
+}
