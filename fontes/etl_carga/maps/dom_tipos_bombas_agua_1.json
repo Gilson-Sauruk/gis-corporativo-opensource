@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Bombas Agua 1",
+    "pgsql_create_table_script": "dom_tipos_bombas_agua_1.sql",
+    "from_to_values": {
+        "C": 1,
+        "D": 2
+    }
+}
