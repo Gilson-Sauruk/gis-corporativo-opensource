@@ -1,6 +1,7 @@
 {
     "pg_database": {
         "host": "sgbd-dev-postgis.sistemas.cesan.com.br",
+        "port": "5433",
         "database": "pgvix",
         "user": "postgres",
         "password": "postgis",

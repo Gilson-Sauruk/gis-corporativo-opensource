@@ -67,7 +67,8 @@ def getJSONFiles(json_prefix):
 
 def getPGSQLConnection(config):
     try:
-        pg_conn = psycopg2.connect(host=config['pg_database']['host'], 
+        pg_conn = psycopg2.connect(host=config['pg_database']['host'],
+                                   port=config['pg_database']['port'],
                                 database=config['pg_database']['database'], 
                                 user=config['pg_database']['user'], 
                                 password=config['pg_database']['password'])
