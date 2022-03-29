@@ -1,0 +1,132 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_core.sde",
+    "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
+    "arcgis_layer": "gisc_core.UGISC.MACROMEDIDOR",
+    "arcgis_attachments": true,
+    "where_clause": null,
+    "pgsql_schema": "cadastro",
+    "pgsql_table": "macromedidor",
+    "pgsql_create_table_script": "macromedidor.sql",
+    "fields": [
+        [
+            "OBJECTID",
+            "objectid",
+            "objectid"
+        ],
+        [
+            "COD_SAP",
+            "cod_sap",
+            "numeric"
+        ],
+        [
+            "STATUS_ELEV",
+            "id_status_elev",
+            "domain_value",
+            "dom_status_elevacao_1"
+        ],
+        [
+            "DATA_INST",
+            "data_inst",
+            "date"
+        ],
+        [
+            "STATUS_CAD",
+            "id_status_cad",
+            "domain_value",
+            "dom_status_cadastro"
+        ],
+        [
+            "STATUS_OP",
+            "id_status_op",
+            "domain_value",
+            "dom_status_operacao"
+        ],
+        [
+            "Enabled",
+            "enabled",
+            "bool"
+        ],
+        [
+            "ELEVACAO",
+            "elevacao",
+            "numeric"
+        ],
+        [
+            "PROFUNDIDADE",
+            "profundidade",
+            "numeric"
+        ],
+        [
+            "ANGULO",
+            "angulo",
+            "numeric"
+        ],
+        [
+            "OBS",
+            "obs",
+            "text"
+        ],
+        [
+            "COD_MERIDIAN",
+            "cod_meridian",
+            "text"
+        ],
+        [
+            "TAG",
+            "tag",
+            "text"
+        ],
+        [
+            "TELEMETRIA",
+            "telemetria",
+            "bool"
+        ],
+        [
+            "Oid_Origen",
+            "oid_origen",
+            "numeric"
+        ],
+        [
+            "COD_SIMP",
+            "cod_simp",
+            "text"
+        ],
+        [
+            "NUM_SS",
+            "num_ss",
+            "text"
+        ],
+        [
+            "DT_ATUALIZACAO",
+            "dt_atualizacao",
+            "date"
+        ],
+        [
+            "DT_INCLUSAO",
+            "dt_inclusao",
+            "date"
+        ],
+        [
+            "USUARIO_ULT_INTERACAO",
+            "usuario_ult_interacao",
+            "text"
+        ],
+        [
+            "NUM_INSTALACAO",
+            "num_instalacao",
+            "numeric"
+        ],
+        [
+            "ACIONAMENTO",
+            "id_acionamento",
+            "domain_value",
+            "dom_status_acionamento_uo"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}

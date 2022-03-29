@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Medidor",
+    "pgsql_create_table_script": "dom_status_medidor.sql",
+    "from_to_values": {
+        "T": 1,
+        "F": 2
+    }
+}
