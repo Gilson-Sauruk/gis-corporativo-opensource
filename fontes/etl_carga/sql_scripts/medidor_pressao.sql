@@ -6,7 +6,7 @@ create table if not exists cadastro.medidor_pressao (
     id_status_elev smallint null,
     id_status_medidor smallint not null,
     data_inst date null,
-    id_status_cad smallint not null,
+    id_status_cad smallint null,
     id_status_op smallint not null,
     enabled boolean null default True,
     elevacao numeric (38, 8) null,

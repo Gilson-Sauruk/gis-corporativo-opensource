@@ -5,7 +5,7 @@ create table if not exists cadastro.macromedidor (
     cod_sap numeric (10, 0) null,
     id_status_elev smallint null,
     data_inst date null,
-    id_status_cad smallint not null,
+    id_status_cad smallint null,
     id_status_op smallint not null,
     enabled boolean null default True,
     elevacao numeric (38, 8) null,
