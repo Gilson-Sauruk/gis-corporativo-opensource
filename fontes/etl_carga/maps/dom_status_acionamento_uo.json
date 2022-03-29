@@ -1,0 +1,9 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Acionamento Uo",
+    "pgsql_create_table_script": "dom_status_acionamento_uo.sql",
+    "from_to_values": {
+        "A": 1,
+        "I": 2
+    }
+}
