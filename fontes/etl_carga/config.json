@@ -4,7 +4,7 @@
         "port": "5433",
         "database": "pgvix",
         "user": "postgres",
-        "password": "postgis",
+        "password": "453278",
         "schemas": {
                     "cadastro": "postgres",
                     "cartografia": "postgres",
