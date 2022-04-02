@@ -274,6 +274,8 @@ def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
                             domain = json_data["fields"][i][3]
                             dict_values = domain_values[domain]
                             try:
+                                if type(value) is unicode:
+                                    value = unidecode(value)
                                 if len(str(value).strip()) == 0:  # consider empty value to null value
                                     str_values += "NULL,"
                                 else:

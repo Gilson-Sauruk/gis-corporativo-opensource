@@ -2,12 +2,12 @@
     "type": "layer",
     "arcgis_connection_file": "gisc_core.sde",
     "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
-    "arcgis_layer": "gisc_core.UGISC.REDE_AGUA_TRATADA",
+    "arcgis_layer": "gisc_core.UGISC.ESTACAO_PITOMETRICA",
     "arcgis_attachments": true,
     "where_clause": null,
     "pgsql_schema": "cadastro",
-    "pgsql_table": "rede_agua_tratada",
-    "pgsql_create_table_script": "rede_agua_tratada.sql",
+    "pgsql_table": "estacao_pitometrica",
+    "pgsql_create_table_script": "estacao_pitometrica.sql",
     "fields": [
         [
             "OBJECTID",
@@ -15,9 +15,21 @@
             "objectid"
         ],
         [
-            "ID_DIAM_MAT",
-            "id_diam_mat",
+            "COD_SAP",
+            "cod_sap",
             "numeric"
+        ],
+        [
+            "STATUS_ELEV",
+            "id_status_elev",
+            "domain_value",
+            "dom_status_elevacao_1"
+        ],
+        [
+            "STATUS_MEDIDOR",
+            "id_status_medidor",
+            "domain_value",
+            "dom_status_medidor"
         ],
         [
             "DATA_INST",
@@ -28,7 +40,7 @@
             "STATUS_CAD",
             "id_status_cad",
             "domain_value",
-            "dom_status_cadastro_1"
+            "dom_status_cadastro"
         ],
         [
             "STATUS_OP",
@@ -42,8 +54,18 @@
             "bool"
         ],
         [
-            "COMPRIMENTO_REAL",
-            "comprimento_real",
+            "ELEVACAO",
+            "elevacao",
+            "numeric"
+        ],
+        [
+            "PROFUNDIDADE",
+            "profundidade",
+            "numeric"
+        ],
+        [
+            "ANGULO",
+            "angulo",
             "numeric"
         ],
         [
@@ -57,9 +79,9 @@
             "text"
         ],
         [
-            "Inconsistente",
-            "inconsistente",
-            "numeric"
+            "TAG",
+            "tag",
+            "text"
         ],
         [
             "Oid_Origen",
@@ -67,50 +89,14 @@
             "numeric"
         ],
         [
-            "DIAMETRO",
-            "diametro",
+            "COD_SIMP",
+            "cod_simp",
             "text"
         ],
         [
-            "MATERIAL",
-            "material",
+            "NUM_SS",
+            "num_ss",
             "text"
-        ],
-        [
-            "SS_INSTALACAO",
-            "ss_instalacao",
-            "text"
-        ],
-        [
-            "PROCESSO",
-            "processo",
-            "text"
-        ],
-        [
-            "ID_CONTRATO",
-            "id_contrato",
-            "numeric"
-        ],
-        [
-            "ID_MEDICAO",
-            "id_medicao",
-            "numeric"
-        ],
-        [
-            "TIPOS_ORIGEM",
-            "id_tipos_origem",
-            "domain_value",
-            "dom_tipos_origem_rede_agua_esgoto"
-        ],
-        [
-            "DATA_INST_GEO",
-            "data_inst_geo",
-            "date"
-        ],
-        [
-            "ID_REDE",
-            "id_rede",
-            "numeric"
         ],
         [
             "SHAPE@WKT",

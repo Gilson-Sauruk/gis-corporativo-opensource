@@ -4,7 +4,7 @@ create table if not exists cadastro.rede_agua_tratada (
     id serial primary key,
     id_diam_mat numeric (10, 0) null,
     data_inst date null,
-    id_status_cad smallint not null,
+    id_status_cad smallint null,
     id_status_op smallint not null,
     enabled boolean null default True,
     comprimento_real numeric (38, 8) null,
@@ -22,7 +22,7 @@ create table if not exists cadastro.rede_agua_tratada (
     data_inst_geo date null,
     id_rede numeric (10, 0) null,
     geometry geometry('MULTILINESTRING', 31984),
-    constraint fk_dom_status_cadastro_rede_agua_tratada foreign key ("id_status_cad") references cadastro.dom_status_cadastro (id) match simple on update no action on delete no action,
+    constraint fk_dom_status_cadastro_rede_agua_tratada foreign key ("id_status_cad") references cadastro.dom_status_cadastro_1 (id) match simple on update no action on delete no action,
     constraint fk_dom_status_operacao_rede_agua_tratada foreign key ("id_status_op") references cadastro.dom_status_operacao (id) match simple on update no action on delete no action,
     constraint fk_dom_tipos_origem_rede_agua_esgoto_rede_agua_tratada foreign key ("id_tipos_origem") references cadastro.dom_tipos_origem_rede_agua_esgoto (id) match simple on update no action on delete no action
 );

@@ -1,0 +1,10 @@
+{
+    "type": "domain_values",
+    "name": "Dom Tipos Tratamento Agua",
+    "pgsql_create_table_script": "dom_tipos_tratamento_agua.sql",
+    "from_to_values": {
+        "C": 1,
+        "FD": 2,
+        "F": 3
+    }
+}
