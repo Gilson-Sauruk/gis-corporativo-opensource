@@ -11,7 +11,7 @@ create table if not exists cadastro.ponto_intervencao (
     nome_rede varchar (50) null,
     id_rede varchar (50) null,
     oid_origen numeric (10, 0) null,
-    geometry geometry('POINTZM', 31984)
+    geometry geometry('POINT', 31984)
 );
 
 create table if not exists cadastro.ponto_intervencao_anexos (
