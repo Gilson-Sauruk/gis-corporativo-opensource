@@ -244,7 +244,12 @@ def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
         oid = None
 
         for value in row:
+            #if value == 699087:
+            #    print "test"
+            #nomecampo = json_data["fields"][i][0]
+
             tipo = json_data["fields"][i][2]
+
 
             if tipo == "objectid":
                 oid = value
@@ -268,7 +273,10 @@ def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
                         f_date = str(value.year) + "-" + str(value.month) + "-" + str(value.day)
                         str_values += "'" + f_date + "',"
                     elif tipo == "bool":
-                        str_values += dict_bool[castBool(value)] + ","
+                        try:
+                            str_values += dict_bool[castBool(value)] + ","
+                        except:
+                            str_values += "NULL,"
                     elif tipo == "domain_value":
                         if domain_values is not None:
                             domain = json_data["fields"][i][3]
@@ -316,7 +324,8 @@ def getSQLValuesString(row, json_data, domain_values, domain_values_ags):
 
         return ret
 
-    except:
+    except Exception as e:
+        #print e
         raise
 
 def LoadDomains(fields):
