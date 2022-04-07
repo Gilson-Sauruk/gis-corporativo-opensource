@@ -1,0 +1,11 @@
+{
+    "type": "domain_values",
+    "name": "Dom Status Derivacao",
+    "pgsql_create_table_script": "dom_status_derivacao.sql",
+    "from_to_values": {
+        "1": 1,
+        "2": 2,
+        "N": 3,
+        "V": 4
+    }
+}

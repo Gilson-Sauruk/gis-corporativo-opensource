@@ -1,0 +1,68 @@
+{
+    "type": "layer",
+    "arcgis_connection_file": "gisc_core.sde",
+    "arcgis_dataset": "gisc_core.UGISC.Cadastro_Agua",
+    "arcgis_layer": "gisc_core.UGISC.PONTO_INTERVENCAO",
+    "arcgis_attachments": true,
+    "where_clause": null,
+    "pgsql_schema": "cadastro",
+    "pgsql_table": "ponto_intervencao",
+    "pgsql_create_table_script": "ponto_intervencao.sql",
+    "fields": [
+        [
+            "OBJECTID",
+            "objectid",
+            "objectid"
+        ],
+        [
+            "Enabled",
+            "enabled",
+            "bool"
+        ],
+        [
+            "PROFUNDIDADE",
+            "profundidade",
+            "numeric"
+        ],
+        [
+            "OBS",
+            "obs",
+            "text"
+        ],
+        [
+            "REDE_EXPOSTA",
+            "rede_exposta",
+            "bool"
+        ],
+        [
+            "PAVIMENTACAO",
+            "pavimentacao",
+            "text"
+        ],
+        [
+            "REINCIDENCIA",
+            "reincidencia",
+            "bool"
+        ],
+        [
+            "NOME_REDE",
+            "nome_rede",
+            "text"
+        ],
+        [
+            "ID_REDE",
+            "id_rede",
+            "text"
+        ],
+        [
+            "Oid_Origen",
+            "oid_origen",
+            "numeric"
+        ],
+        [
+            "SHAPE@WKT",
+            "geometry",
+            "geometry"
+        ]
+    ]
+}
