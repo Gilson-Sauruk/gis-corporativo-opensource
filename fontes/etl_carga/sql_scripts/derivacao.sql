@@ -3,7 +3,7 @@ drop table if exists cadastro.derivacao, cadastro.derivacao_anexos;
 create table if not exists cadastro.derivacao (
     id serial primary key,
     id_diam_mat numeric (10, 0) not null,
-    id_status smallint not null,
+    id_status smallint null,
     enabled boolean null default True,
     obs text null,
     oid_origen numeric (10, 0) null,
