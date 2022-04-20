@@ -15,7 +15,7 @@ create table if not exists cadastro.cap (
     cod_meridian varchar (50) null,
     oid_origen numeric (10, 0) null,
     num_ss varchar (50) null,
-    geometry geometry('POINTZM', 31984),
+    geometry geometry('POINT', 31984),
     constraint fk_dom_status_elevacao_1_cap foreign key ("id_status_elev") references cadastro.dom_status_elevacao_1 (id) match simple on update no action on delete no action,
     constraint fk_dom_status_cadastro_cap foreign key ("id_status_cad") references cadastro.dom_status_cadastro (id) match simple on update no action on delete no action,
     constraint fk_dom_status_operacao_cap foreign key ("id_status_op") references cadastro.dom_status_operacao (id) match simple on update no action on delete no action
